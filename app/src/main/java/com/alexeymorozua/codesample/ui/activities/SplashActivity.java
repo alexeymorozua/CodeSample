@@ -30,10 +30,8 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
 
     @Override
     public void setAuthorized(boolean isAuthorized) {
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class);
-            startActivity(intent);
-            this.finish();
-        }, 1000);
+        Intent intent = new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 }

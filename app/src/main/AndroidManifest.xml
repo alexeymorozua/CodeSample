@@ -13,7 +13,6 @@
       android:theme="@style/AppTheme">
     <activity
         android:name=".ui.activities.SplashActivity"
-        android:configChanges="orientation|screenSize"
         android:theme="@style/SplashTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
