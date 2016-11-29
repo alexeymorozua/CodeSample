@@ -8,11 +8,14 @@ import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
 import java.lang.reflect.Field;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * Created by john on 29.11.2016.
@@ -25,10 +28,12 @@ import rx.schedulers.Schedulers;
   }
 
   @Provides @PerApplication
-  public Retrofit.Builder provideRetrofitBuilder(Converter.Factory converterFactory) {
+  public Retrofit.Builder provideRetrofitBuilder(Converter.Factory converterFactory,
+      OkHttpClient okHttpClient) {
     return new Retrofit.Builder().addCallAdapterFactory(
         RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
-        .addConverterFactory(converterFactory);
+        .addConverterFactory(converterFactory)
+        .client(okHttpClient);
   }
 
   @Provides @PerApplication public Converter.Factory provideConverterFactory(Gson gson) {
@@ -42,6 +47,13 @@ import rx.schedulers.Schedulers;
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
         .serializeNulls()
         .create();
+  }
+
+  @Provides @PerApplication public OkHttpClient provideOkHttpClient() {
+    HttpLoggingInterceptor logging =
+        new HttpLoggingInterceptor(message -> Timber.tag("response").d(message));
+    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+    return new OkHttpClient.Builder().addInterceptor(logging).build();
   }
 
   private static class CustomFieldNamingPolicy implements FieldNamingStrategy {
