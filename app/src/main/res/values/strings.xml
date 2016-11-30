@@ -6,6 +6,7 @@
   <string name="action_sign_in">Sign in</string>
   <string name="error_field_required">This field is required</string>
   <string name="error_invalid_password">This password is too short</string>
+  <string name="sign_out">Sign out</string>
 
   <string name="dialog_action_ok">OK</string>
   <string name="dialog_error_title">Sorry</string>

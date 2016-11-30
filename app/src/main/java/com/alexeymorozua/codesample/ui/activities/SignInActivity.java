@@ -91,8 +91,7 @@ public class SignInActivity extends MvpAppCompatActivity
   }
 
   @Override public void successSignIn() {
-    Intent intent = new Intent(this, HomeActivity.class);
-    startActivity(intent);
+    startActivity(new Intent(this, HomeActivity.class));
     this.finishAffinity();
   }
 

@@ -2,8 +2,6 @@ package com.alexeymorozua.codesample.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-
 import com.alexeymorozua.codesample.mvp.presenters.SplashPresenter;
 import com.alexeymorozua.codesample.mvp.views.SplashView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -30,8 +28,7 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
 
     @Override
     public void setAuthorized(boolean isAuthorized) {
-        Intent intent = new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class));
         this.finish();
     }
 }
