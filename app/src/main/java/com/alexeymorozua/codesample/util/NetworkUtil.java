@@ -9,7 +9,7 @@ import retrofit2.adapter.rxjava.HttpException;
  * Created by john on 28.11.2016.
  */
 
-public class NetworkUtil {
+public final class NetworkUtil {
 
   /**
    * Returns true if the Throwable is an instance of RetrofitError with an
