@@ -2,12 +2,10 @@ package com.alexeymorozua.codesample.injection.modules;
 
 import com.alexeymorozua.codesample.injection.scopes.PerApplication;
 import com.google.gson.FieldNamingPolicy;
-import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dagger.Module;
 import dagger.Provides;
-import java.lang.reflect.Field;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
@@ -42,8 +40,6 @@ import timber.log.Timber;
 
   @Provides @PerApplication Gson provideGson() {
     return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
-        .setFieldNamingStrategy(new CustomFieldNamingPolicy())
-        .setPrettyPrinting()
         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
         .serializeNulls()
         .create();
@@ -54,13 +50,5 @@ import timber.log.Timber;
         new HttpLoggingInterceptor(message -> Timber.tag("response").d(message));
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
     return new OkHttpClient.Builder().addInterceptor(logging).build();
-  }
-
-  private static class CustomFieldNamingPolicy implements FieldNamingStrategy {
-    @Override public String translateName(Field field) {
-      String name = FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES.translateName(field);
-      name = name.substring(2, name.length()).toLowerCase();
-      return name;
-    }
   }
 }
