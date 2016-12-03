@@ -4,6 +4,7 @@ import com.alexeymorozua.codesample.injection.modules.AppModule;
 import com.alexeymorozua.codesample.injection.modules.GithubModule;
 import com.alexeymorozua.codesample.injection.scopes.PerApplication;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
+import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SignInPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SplashPresenter;
 import dagger.Component;
@@ -20,4 +21,6 @@ public interface AppComponent {
   void inject(SplashPresenter presenter);
 
   void inject(HomePresenter presenter);
+
+  void inject(RepositoriesPresenter presenter);
 }

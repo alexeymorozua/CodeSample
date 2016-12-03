@@ -74,11 +74,14 @@ public class SignInActivity extends MvpAppCompatActivity
 
   @Override public void showError(String message) {
     mErrorDialog = DialogFactory.createGenericErrorDialog(this, message);
+    mErrorDialog.setOnCancelListener(this);
     mErrorDialog.show();
   }
 
   @Override public void hideError() {
-    mErrorDialog.cancel();
+    if (mErrorDialog != null) {
+      mErrorDialog.cancel();
+    }
   }
 
   @Override public void showError(Integer emailError, Integer passwordError) {
@@ -97,5 +100,12 @@ public class SignInActivity extends MvpAppCompatActivity
 
   @Override public void onCancel(DialogInterface dialogInterface) {
     mSignInPresenter.onErrorCancel();
+  }
+
+  @Override protected void onDestroy() {
+    if (mErrorDialog != null) {
+      mErrorDialog.dismiss();
+    }
+    super.onDestroy();
   }
 }

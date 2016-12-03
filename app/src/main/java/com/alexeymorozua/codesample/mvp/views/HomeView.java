@@ -1,6 +1,6 @@
 package com.alexeymorozua.codesample.mvp.views;
 
-import com.alexeymorozua.codesample.mvp.data.model.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;

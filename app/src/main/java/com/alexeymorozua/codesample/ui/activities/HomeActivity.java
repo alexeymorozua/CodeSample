@@ -1,5 +1,7 @@
 package com.alexeymorozua.codesample.ui.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,19 +15,25 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.model.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
+import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
+import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
+import com.alexeymorozua.codesample.util.DialogFactory;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import java.util.List;
 
 /**
  * Created by john on 24.11.2016.
  */
 
-public class HomeActivity extends MvpAppCompatActivity implements HomeView {
+public class HomeActivity extends MvpAppCompatActivity
+    implements HomeView, RepositoriesView, DialogInterface.OnCancelListener {
 
     @InjectPresenter HomePresenter mHomePresenter;
+    @InjectPresenter RepositoriesPresenter mRepositoriesPresenter;
 
     @BindView(R.id.toolbar_activity_home) Toolbar mToolbar;
     @BindView(R.id.text_activity_home_no_repositories) TextView mNoRepositoriesTextView;
@@ -35,6 +43,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     @BindView(R.id.floating_button_activity_home) FloatingActionButton
         mLikeRepositoryFloatingActionButton;
 
+    private Dialog mErrorDialog;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +69,35 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         }
     }
 
+    @Override public void showError(String message) {
+        mErrorDialog = DialogFactory.createGenericErrorDialog(this, message);
+        mErrorDialog.setOnCancelListener(this);
+        mErrorDialog.show();
+    }
+
+    @Override public void hideError() {
+        if (mErrorDialog != null) {
+            mErrorDialog.cancel();
+        }
+    }
+
+    @Override public void onStartLoading() {
+        mNoRepositoriesTextView.setVisibility(View.GONE);
+        mRepositoriesProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override public void onFinishLoading() {
+        mRepositoriesProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override public void setRepositories(List<Repository> repositories, boolean maybeMore) {
+
+    }
+
+    @Override public void addRepositories(List<Repository> repositories, boolean maybeMore) {
+
+    }
+
     @Override public void showDetails(int position, Repository repository) {
 
     }
@@ -71,5 +109,16 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     @Override public void signOut() {
         startActivity(new Intent(this, SignInActivity.class));
         finishAffinity();
+    }
+
+    @Override public void onCancel(DialogInterface dialogInterface) {
+        mRepositoriesPresenter.onErrorCancel();
+    }
+
+    @Override protected void onDestroy() {
+        if (mErrorDialog != null) {
+            mErrorDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

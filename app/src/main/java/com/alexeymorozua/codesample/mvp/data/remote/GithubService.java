@@ -1,6 +1,7 @@
 package com.alexeymorozua.codesample.mvp.data.remote;
 
-import com.alexeymorozua.codesample.mvp.data.model.User;
+import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
+import com.alexeymorozua.codesample.mvp.data.model.user.User;
 import rx.Observable;
 
 /**
@@ -17,5 +18,9 @@ public class GithubService {
 
   public Observable<User> signIn(String token) {
     return mGithubApi.signIn(token);
+  }
+
+  public Observable<SearchRepository> getSearchRepositories(String query, int page, int pageSize) {
+    return mGithubApi.getSearchRepositories(query, page, pageSize);
   }
 }
