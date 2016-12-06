@@ -1,16 +1,16 @@
 package com.alexeymorozua.codesample;
 
+import android.app.Application;
 import com.alexeymorozua.codesample.injection.components.AppComponent;
 import com.alexeymorozua.codesample.injection.components.DaggerAppComponent;
 import com.alexeymorozua.codesample.injection.modules.AppModule;
-import com.arellomobile.mvp.MvpApplication;
 import timber.log.Timber;
 
 /**
  * Created by john on 24.11.2016.
  */
 
-public class CodeSampleApp extends MvpApplication {
+public class CodeSampleApp extends Application {
 
   private static AppComponent sAppComponent;
 

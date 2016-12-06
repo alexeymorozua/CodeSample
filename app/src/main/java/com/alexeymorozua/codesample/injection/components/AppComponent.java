@@ -1,6 +1,7 @@
 package com.alexeymorozua.codesample.injection.components;
 
 import com.alexeymorozua.codesample.injection.modules.AppModule;
+import com.alexeymorozua.codesample.injection.modules.BusModule;
 import com.alexeymorozua.codesample.injection.modules.GithubModule;
 import com.alexeymorozua.codesample.injection.scopes.PerApplication;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
@@ -13,7 +14,7 @@ import dagger.Component;
  * Created by john on 25.11.2016.
  */
 
-@PerApplication @Component(modules = { AppModule.class, GithubModule.class })
+@PerApplication @Component(modules = { AppModule.class, GithubModule.class, BusModule.class })
 public interface AppComponent {
 
   void inject(SignInPresenter presenter);
