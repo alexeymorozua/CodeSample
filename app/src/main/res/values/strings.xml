@@ -9,6 +9,8 @@
   <string name="sign_out">Sign out</string>
   <string name="no_repositories">No repositories</string>
   <string name="update_on">Upd:</string>
+  <string name="repositories">repositories</string>
+  <string name="save_repositories">save repositories</string>
 
   <string name="dialog_action_ok">OK</string>
   <string name="dialog_error_title">Sorry</string>
