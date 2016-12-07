@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,7 +22,9 @@ import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
+import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
 import com.alexeymorozua.codesample.util.DialogFactory;
+import com.alexeymorozua.codesample.util.ItemClickSupport;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import java.util.List;
@@ -44,6 +48,7 @@ public class HomeActivity extends MvpAppCompatActivity
         mLikeRepositoryFloatingActionButton;
 
     private Dialog mErrorDialog;
+    private RepositoriesAdapter mRepositoriesAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,18 @@ public class HomeActivity extends MvpAppCompatActivity
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mRepositoriesRecyclerView.setLayoutManager(mLayoutManager);
+        mRepositoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mRepositoriesAdapter = new RepositoriesAdapter();
+        mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
+
+        ItemClickSupport.addTo(mRepositoriesRecyclerView)
+            .setOnItemClickListener((recyclerView, position, v) -> {
+
+            });
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,7 +108,7 @@ public class HomeActivity extends MvpAppCompatActivity
     }
 
     @Override public void setRepositories(List<Repository> repositories, boolean maybeMore) {
-
+        mRepositoriesAdapter.setRepositories(repositories, maybeMore);
     }
 
     @Override public void addRepositories(List<Repository> repositories, boolean maybeMore) {

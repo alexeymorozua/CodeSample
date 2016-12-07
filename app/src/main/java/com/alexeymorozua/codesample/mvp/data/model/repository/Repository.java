@@ -2,6 +2,7 @@ package com.alexeymorozua.codesample.mvp.data.model.repository;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.Date;
 
 public class Repository {
 
@@ -14,9 +15,9 @@ public class Repository {
   @SerializedName("description") @Expose private String description;
   @SerializedName("fork") @Expose private boolean fork;
   @SerializedName("url") @Expose private String url;
-  @SerializedName("created_at") @Expose private String createdAt;
-  @SerializedName("updated_at") @Expose private String updatedAt;
-  @SerializedName("pushed_at") @Expose private String pushedAt;
+  @SerializedName("created_at") @Expose private Date createdAt;
+  @SerializedName("updated_at") @Expose private Date updatedAt;
+  @SerializedName("pushed_at") @Expose private Date pushedAt;
   @SerializedName("homepage") @Expose private String homepage;
   @SerializedName("size") @Expose private int size;
   @SerializedName("stargazers_count") @Expose private int stargazersCount;
@@ -157,42 +158,42 @@ public class Repository {
   /**
    * @return The createdAt
    */
-  public String getCreatedAt() {
+  public Date getCreatedAt() {
     return createdAt;
   }
 
   /**
    * @param createdAt The created_at
    */
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
 
   /**
    * @return The updatedAt
    */
-  public String getUpdatedAt() {
+  public Date getUpdatedAt() {
     return updatedAt;
   }
 
   /**
    * @param updatedAt The updated_at
    */
-  public void setUpdatedAt(String updatedAt) {
+  public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
   }
 
   /**
    * @return The pushedAt
    */
-  public String getPushedAt() {
+  public Date getPushedAt() {
     return pushedAt;
   }
 
   /**
    * @param pushedAt The pushed_at
    */
-  public void setPushedAt(String pushedAt) {
+  public void setPushedAt(Date pushedAt) {
     this.pushedAt = pushedAt;
   }
 

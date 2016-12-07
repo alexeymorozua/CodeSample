@@ -46,7 +46,7 @@ import timber.log.Timber;
     getViewState().onStartLoading();
 
     Observable<SearchRepository> observable =
-        mGithubService.getSearchRepositories("android", page, GithubApi.PAGE_SIZE);
+        mGithubService.getSearchRepositories("Dagger 2 and Retrofit 2", page, GithubApi.PAGE_SIZE);
 
     Subscription subscription =
         observable.observeOn(AndroidSchedulers.mainThread()).subscribe(repositories -> {
