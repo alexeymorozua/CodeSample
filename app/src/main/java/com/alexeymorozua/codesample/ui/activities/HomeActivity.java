@@ -17,6 +17,7 @@ import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.ui.adapters.ViewPagerRepositoriesAdapter;
 import com.alexeymorozua.codesample.ui.fragments.RepositoriesFragment;
+import com.alexeymorozua.codesample.ui.fragments.SaveRepositoriesFragment;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -81,7 +82,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
             new ViewPagerRepositoriesAdapter(getSupportFragmentManager());
         adapter.addFragment(new RepositoriesFragment(),
             getResources().getString(R.string.repositories));
-        adapter.addFragment(new RepositoriesFragment(),
+        adapter.addFragment(new SaveRepositoriesFragment(),
             getResources().getString(R.string.save_repositories));
         viewPager.setAdapter(adapter);
     }

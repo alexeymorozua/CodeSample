@@ -19,6 +19,7 @@ import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
 import com.alexeymorozua.codesample.util.DialogFactory;
 import com.alexeymorozua.codesample.util.ItemClickSupport;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.paginate.Paginate;
 import java.util.List;
 
 /**
@@ -26,7 +27,7 @@ import java.util.List;
  */
 
 public class RepositoriesFragment extends BaseFragment
-    implements RepositoriesView, DialogInterface.OnCancelListener {
+    implements RepositoriesView, DialogInterface.OnCancelListener, Paginate.Callbacks {
 
   @InjectPresenter RepositoriesPresenter mRepositoriesPresenter;
 
@@ -37,19 +38,28 @@ public class RepositoriesFragment extends BaseFragment
   private Dialog mErrorDialog;
   private RepositoriesAdapter mRepositoriesAdapter;
 
+  private boolean mLoading;
+  private int mPage = 1;
+  private int mTotalPages;
+
   public RepositoriesFragment() {
     super(R.layout.fragment_reposotories);
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt("page", mPage);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    if (savedInstanceState != null) {
+      mPage = savedInstanceState.getInt("page");
+    }
 
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
     mRepositoriesRecyclerView.setLayoutManager(mLayoutManager);
     mRepositoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-    mRepositoriesAdapter = new RepositoriesAdapter();
-    mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
 
     ItemClickSupport.addTo(mRepositoriesRecyclerView)
         .setOnItemClickListener((recyclerView, position, v) -> {
@@ -69,6 +79,10 @@ public class RepositoriesFragment extends BaseFragment
     }
   }
 
+  @Override public void setTotalPages(int pages) {
+    mTotalPages = pages;
+  }
+
   @Override public void onStartLoading() {
     mNoRepositoriesTextView.setVisibility(View.GONE);
     mRepositoriesProgressBar.setVisibility(View.VISIBLE);
@@ -78,13 +92,21 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesProgressBar.setVisibility(View.GONE);
   }
 
-  @Override public void setRepositories(List<Repository> repositories, boolean maybeMore) {
-    mRepositoriesAdapter.setRepositories(repositories, maybeMore);
-    mNoRepositoriesTextView.setVisibility(repositories.isEmpty() ? View.VISIBLE : View.GONE);
+  @Override public void setRepositories(List<Repository> repositories) {
+    if (!repositories.isEmpty()) {
+      mRepositoriesAdapter = new RepositoriesAdapter();
+      mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
+      mRepositoriesAdapter.setRepositories(repositories);
+      Paginate.with(mRepositoriesRecyclerView, this).addLoadingListItem(true).build();
+    } else {
+      mNoRepositoriesTextView.setVisibility(repositories.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
   }
 
-  @Override public void addRepositories(List<Repository> repositories, boolean maybeMore) {
-
+  @Override public void addRepositories(List<Repository> repositories) {
+    mRepositoriesAdapter.addRepositories(repositories);
+    mLoading = false;
   }
 
   @Override public void onCancel(DialogInterface dialogInterface) {
@@ -96,5 +118,19 @@ public class RepositoriesFragment extends BaseFragment
       mErrorDialog.dismiss();
     }
     super.onDestroyView();
+  }
+
+  @Override public void onLoadMore() {
+    mLoading = true;
+    mPage++;
+    mRepositoriesPresenter.loadNextRepositories(mPage);
+  }
+
+  @Override public boolean isLoading() {
+    return mLoading;
+  }
+
+  @Override public boolean hasLoadedAllItems() {
+    return mPage == mTotalPages;
   }
 }

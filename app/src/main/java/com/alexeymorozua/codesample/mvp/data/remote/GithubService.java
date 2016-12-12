@@ -2,6 +2,7 @@ package com.alexeymorozua.codesample.mvp.data.remote;
 
 import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
 import com.alexeymorozua.codesample.mvp.data.model.user.User;
+import retrofit2.Response;
 import rx.Observable;
 
 /**
@@ -20,7 +21,8 @@ public class GithubService {
     return mGithubApi.signIn(token);
   }
 
-  public Observable<SearchRepository> getSearchRepositories(String query, int page, int pageSize) {
+  public Observable<Response<SearchRepository>> getSearchRepositories(String query, int page,
+      int pageSize) {
     return mGithubApi.getSearchRepositories(query, page, pageSize);
   }
 }

@@ -6,9 +6,11 @@ import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
+import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.arellomobile.mvp.InjectViewState;
 import java.util.List;
 import javax.inject.Inject;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,9 +33,7 @@ import timber.log.Timber;
     loadRepositories();
   }
 
-  public void loadNextRepositories(int currentCount) {
-    int page = currentCount / GithubApi.PAGE_SIZE + 1;
-
+  public void loadNextRepositories(int page) {
     loadData(page, true);
   }
 
@@ -43,10 +43,20 @@ import timber.log.Timber;
 
   private void loadData(int page, boolean isPageLoading) {
 
-    getViewState().onStartLoading();
+    if (!isPageLoading) {
+      getViewState().onStartLoading();
+    }
 
     Observable<SearchRepository> observable =
-        mGithubService.getSearchRepositories("Dagger 2 and Retrofit 2", page, GithubApi.PAGE_SIZE);
+        mGithubService.getSearchRepositories("Android", page, GithubApi.PAGE_SIZE)
+            .doOnNext(searchRepositoryResponse -> {
+              int totalPages =
+                  PageLinksUtil.getTotalPages(searchRepositoryResponse.headers().get("Link"));
+              if (totalPages > 0) {
+                getViewState().setTotalPages(totalPages);
+              }
+            })
+            .map(Response::body);
 
     Subscription subscription =
         observable.observeOn(AndroidSchedulers.mainThread()).subscribe(repositories -> {
@@ -62,12 +72,10 @@ import timber.log.Timber;
 
   private void onLoadingSuccess(boolean isPageLoading, List<Repository> repositories) {
 
-    boolean maybeMore = repositories.size() >= GithubApi.PAGE_SIZE;
-
     if (isPageLoading) {
-      getViewState().addRepositories(repositories, maybeMore);
+      getViewState().addRepositories(repositories);
     } else {
-      getViewState().setRepositories(repositories, maybeMore);
+      getViewState().setRepositories(repositories);
     }
   }
 

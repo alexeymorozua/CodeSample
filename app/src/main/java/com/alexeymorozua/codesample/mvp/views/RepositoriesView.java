@@ -17,12 +17,13 @@ import java.util.List;
 
   void hideError();
 
+  void setTotalPages(int pages);
+
   void onStartLoading();
 
   void onFinishLoading();
 
-  void setRepositories(List<Repository> repositories, boolean maybeMore);
+  void setRepositories(List<Repository> repositories);
 
-  @StateStrategyType(AddToEndStrategy.class) void addRepositories(List<Repository> repositories,
-      boolean maybeMore);
+  @StateStrategyType(AddToEndStrategy.class) void addRepositories(List<Repository> repositories);
 }
