@@ -2,6 +2,8 @@ package com.alexeymorozua.codesample.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alexeymorozua.codesample.R;
@@ -32,9 +35,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     @BindView(R.id.toolbar_activity_home) Toolbar mToolbar;
     @BindView(R.id.tab_layout_activity_home) TabLayout mTabLayout;
     @BindView(R.id.view_pager_activity_home) ViewPager mViewPager;
+    @BindView(R.id.text_activity_home_name_repository) TextView mNameRepository;
     @BindView(R.id.bottom_sheet_activity_home_repository) View mRepositoryBottomSheet;
     @BindView(R.id.floating_button_activity_home) FloatingActionButton
-        mLikeRepositoryFloatingActionButton;
+        mLikeRepositoryFloatingButton;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +52,22 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mLikeRepositoryFloatingButton.setVisibility(View.GONE);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    mHomePresenter.hideRepositoryDetail();
+                }
+            }
+
+            @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
 
     }
 
@@ -64,12 +86,15 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         }
     }
 
-    @Override public void showDetails(int position, Repository repository) {
-
+    @Override public void showRepositoryDetail(Repository repository) {
+        mNameRepository.setText(repository.getFullName());
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mLikeRepositoryFloatingButton.setVisibility(View.VISIBLE);
     }
 
-    @Override public void showDetailsContainer() {
-
+    @Override public void hideRepositoryDetail() {
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mLikeRepositoryFloatingButton.setVisibility(View.GONE);
     }
 
     @Override public void signOut() {

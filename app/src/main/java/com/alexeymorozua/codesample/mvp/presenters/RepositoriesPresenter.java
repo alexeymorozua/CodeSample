@@ -6,8 +6,10 @@ import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
+import com.alexeymorozua.codesample.util.BusHelper;
 import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.arellomobile.mvp.InjectViewState;
+import com.squareup.otto.Bus;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Response;
@@ -23,6 +25,7 @@ import timber.log.Timber;
 @InjectViewState public class RepositoriesPresenter extends BasePresenter<RepositoriesView> {
 
   @Inject GithubService mGithubService;
+  @Inject Bus mBus;
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -31,6 +34,10 @@ import timber.log.Timber;
   @Override protected void onFirstViewAttach() {
     super.onFirstViewAttach();
     loadRepositories();
+  }
+
+  public void showRepositoryDetail(Repository repository) {
+    mBus.post(new BusHelper.ShowRepositoryDetail(repository));
   }
 
   public void loadNextRepositories(int page) {

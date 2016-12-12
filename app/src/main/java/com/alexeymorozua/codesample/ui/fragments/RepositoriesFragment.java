@@ -62,9 +62,9 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     ItemClickSupport.addTo(mRepositoriesRecyclerView)
-        .setOnItemClickListener((recyclerView, position, v) -> {
-
-        });
+        .setOnItemClickListener(
+            (recyclerView, position, v) -> mRepositoriesPresenter.showRepositoryDetail(
+                mRepositoriesAdapter.getItem(position)));
   }
 
   @Override public void showError(String message) {

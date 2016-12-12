@@ -46,6 +46,10 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     return mRepositories.size();
   }
 
+  public Repository getItem(int position) {
+    return mRepositories.get(position);
+  }
+
   public void setRepositories(List<Repository> repositories) {
     mRepositories = new ArrayList<>(repositories);
     notifyDataSetChanged();

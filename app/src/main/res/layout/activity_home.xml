@@ -38,6 +38,7 @@
       android:id="@+id/bottom_sheet_activity_home_repository"
       android:layout_width="match_parent"
       android:layout_height="350dp"
+      android:clickable="true"
       android:background="@android:color/holo_orange_light"
       app:behavior_hideable="true"
       app:behavior_peekHeight="80dp"
@@ -45,10 +46,10 @@
       >
 
     <TextView
+        android:id="@+id/text_activity_home_name_repository"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="Detail repository"
         android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         />
