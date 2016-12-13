@@ -62,9 +62,11 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     ItemClickSupport.addTo(mRepositoriesRecyclerView)
-        .setOnItemClickListener(
-            (recyclerView, position, v) -> mRepositoriesPresenter.showRepositoryDetail(
-                mRepositoriesAdapter.getItem(position)));
+        .setOnItemClickListener((recyclerView, position, v) -> {
+          if (mRepositoriesAdapter.getItem(position) != null) {
+            mRepositoriesPresenter.showRepositoryDetail(mRepositoriesAdapter.getItem(position));
+          }
+        });
   }
 
   @Override public void showError(String message) {
@@ -97,7 +99,7 @@ public class RepositoriesFragment extends BaseFragment
       mRepositoriesAdapter = new RepositoriesAdapter();
       mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
       mRepositoriesAdapter.setRepositories(repositories);
-      Paginate.with(mRepositoriesRecyclerView, this).addLoadingListItem(true).build();
+      Paginate.with(mRepositoriesRecyclerView, this).build();
     } else {
       mNoRepositoriesTextView.setVisibility(repositories.isEmpty() ? View.VISIBLE : View.GONE);
     }

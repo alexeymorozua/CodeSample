@@ -47,6 +47,9 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
   }
 
   public Repository getItem(int position) {
+    if (position == getItemCount()) {
+      return null;
+    }
     return mRepositories.get(position);
   }
 
