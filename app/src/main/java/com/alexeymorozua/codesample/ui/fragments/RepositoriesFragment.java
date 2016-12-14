@@ -16,6 +16,7 @@ import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
+import com.alexeymorozua.codesample.ui.views.CustomLoadingListItemCreator;
 import com.alexeymorozua.codesample.util.DialogFactory;
 import com.alexeymorozua.codesample.util.ItemClickSupport;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -62,11 +63,9 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     ItemClickSupport.addTo(mRepositoriesRecyclerView)
-        .setOnItemClickListener((recyclerView, position, v) -> {
-          if (mRepositoriesAdapter.getItem(position) != null) {
-            mRepositoriesPresenter.showRepositoryDetail(mRepositoriesAdapter.getItem(position));
-          }
-        });
+        .setOnItemClickListener(
+            (recyclerView, position, v) -> mRepositoriesPresenter.showRepositoryDetail(
+                mRepositoriesAdapter.getItem(position)));
   }
 
   @Override public void showError(String message) {
@@ -99,7 +98,9 @@ public class RepositoriesFragment extends BaseFragment
       mRepositoriesAdapter = new RepositoriesAdapter();
       mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
       mRepositoriesAdapter.setRepositories(repositories);
-      Paginate.with(mRepositoriesRecyclerView, this).build();
+      Paginate.with(mRepositoriesRecyclerView, this)
+          .setLoadingListItemCreator(new CustomLoadingListItemCreator())
+          .build();
     } else {
       mNoRepositoriesTextView.setVisibility(repositories.isEmpty() ? View.VISIBLE : View.GONE);
     }
