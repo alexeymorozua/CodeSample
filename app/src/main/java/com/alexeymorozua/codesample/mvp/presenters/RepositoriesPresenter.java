@@ -10,6 +10,7 @@ import com.alexeymorozua.codesample.util.BusHelper;
 import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.arellomobile.mvp.InjectViewState;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Response;
@@ -27,13 +28,12 @@ import timber.log.Timber;
   @Inject GithubService mGithubService;
   @Inject Bus mBus;
 
+  private String mQuery;
+
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
-  }
 
-  @Override protected void onFirstViewAttach() {
-    super.onFirstViewAttach();
-    loadRepositories();
+    mBus.register(this);
   }
 
   public void showRepositoryDetail(Repository repository) {
@@ -41,21 +41,21 @@ import timber.log.Timber;
   }
 
   public void loadNextRepositories(int page) {
-    loadData(page, true);
+    loadData(page, true, mQuery);
   }
 
-  private void loadRepositories() {
-    loadData(1, false);
+  private void loadRepositories(String query) {
+    loadData(1, false, query);
   }
 
-  private void loadData(int page, boolean isPageLoading) {
+  private void loadData(int page, boolean isPageLoading, String query) {
 
     if (!isPageLoading) {
       getViewState().onStartLoading();
     }
 
     Observable<SearchRepository> observable =
-        mGithubService.getSearchRepositories("Android", page, GithubApi.PAGE_SIZE)
+        mGithubService.getSearchRepositories(query, page, GithubApi.PAGE_SIZE)
             .doOnNext(searchRepositoryResponse -> {
               int totalPages =
                   PageLinksUtil.getTotalPages(searchRepositoryResponse.headers().get("Link"));
@@ -88,5 +88,16 @@ import timber.log.Timber;
 
   public void onErrorCancel() {
     getViewState().hideError();
+  }
+
+  @Subscribe
+  public void downloadRepositories(BusHelper.StartDownloadRepository downloadRepository) {
+    mQuery = downloadRepository.query;
+    loadRepositories(mQuery);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    mBus.unregister(this);
   }
 }

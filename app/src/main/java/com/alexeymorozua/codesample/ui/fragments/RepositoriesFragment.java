@@ -86,6 +86,7 @@ public class RepositoriesFragment extends BaseFragment
 
   @Override public void onStartLoading() {
     mNoRepositoriesTextView.setVisibility(View.GONE);
+    mRepositoriesRecyclerView.setVisibility(View.GONE);
     mRepositoriesProgressBar.setVisibility(View.VISIBLE);
   }
 
@@ -95,14 +96,21 @@ public class RepositoriesFragment extends BaseFragment
 
   @Override public void setRepositories(List<Repository> repositories) {
     if (!repositories.isEmpty()) {
+      mNoRepositoriesTextView.setVisibility(View.GONE);
+      mRepositoriesRecyclerView.setVisibility(View.VISIBLE);
+
       mRepositoriesAdapter = new RepositoriesAdapter();
       mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
       mRepositoriesAdapter.setRepositories(repositories);
-      Paginate.with(mRepositoriesRecyclerView, this)
+
+      if (mTotalPages > 1) {
+        Paginate.with(mRepositoriesRecyclerView, this)
           .setLoadingListItemCreator(new CustomLoadingListItemCreator())
           .build();
+      }
+
     } else {
-      mNoRepositoriesTextView.setVisibility(repositories.isEmpty() ? View.VISIBLE : View.GONE);
+      mNoRepositoriesTextView.setVisibility(View.VISIBLE);
     }
 
   }

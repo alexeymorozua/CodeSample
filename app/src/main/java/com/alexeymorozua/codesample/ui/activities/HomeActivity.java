@@ -23,6 +23,9 @@ import com.alexeymorozua.codesample.ui.fragments.RepositoriesFragment;
 import com.alexeymorozua.codesample.ui.fragments.SaveRepositoriesFragment;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.lapism.searchview.SearchAdapter;
+import com.lapism.searchview.SearchView;
+import java.util.ArrayList;
 
 /**
  * Created by john on 24.11.2016.
@@ -39,8 +42,10 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     @BindView(R.id.bottom_sheet_activity_home_repository) View mRepositoryBottomSheet;
     @BindView(R.id.floating_button_activity_home) FloatingActionButton
         mLikeRepositoryFloatingButton;
+    @BindView(R.id.search_view) SearchView mSearchView;
 
     private BottomSheetBehavior mBottomSheetBehavior;
+    private SearchAdapter mSearchAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +58,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         setupViewPager(mViewPager);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mLikeRepositoryFloatingButton.setVisibility(View.GONE);
+        mSearchView.setArrowOnly(false);
+        mSearchView.setVoice(false);
+        mSearchView.setVersion(SearchView.VERSION_MENU_ITEM);
+        mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_MENU_ITEM);
+        mSearchView.setTheme(SearchView.THEME_LIGHT, true);
+        mSearchView.setHint(R.string.search);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -69,6 +79,27 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
             }
         });
 
+        mSearchAdapter = new SearchAdapter(this);
+        mSearchAdapter.addOnItemClickListener((view, position) -> {
+            TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
+            String query = textView.getText().toString();
+            mHomePresenter.startDownloadRepositories(query);
+            mSearchView.close(true);
+        });
+        mSearchView.setAdapter(mSearchAdapter);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) {
+                mHomePresenter.startDownloadRepositories(query);
+                mSearchView.close(true);
+                return true;
+            }
+
+            @Override public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +112,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
             case R.id.menu_home_sign_out:
                 mHomePresenter.signOut();
                 return true;
+            case R.id.menu_search:
+                mSearchView.open(true, item);
+                return true;
+            case R.id.menu_clear_history_search:
+                mHomePresenter.clearHistoryDatabase();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -89,7 +126,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     @Override public void showRepositoryDetail(Repository repository) {
         mNameRepository.setText(repository.getFullName());
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mLikeRepositoryFloatingButton.setVisibility(View.VISIBLE);
+        mLikeRepositoryFloatingButton.show();
     }
 
     @Override public void hideRepositoryDetail() {
@@ -97,9 +134,20 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         mLikeRepositoryFloatingButton.setVisibility(View.GONE);
     }
 
+    @Override public void selectTab() {
+        TabLayout.Tab tab = mTabLayout.getTabAt(0);
+        if (tab != null) {
+            tab.select();
+        }
+    }
+
     @Override public void signOut() {
         startActivity(new Intent(this, SignInActivity.class));
         finishAffinity();
+    }
+
+    @Override public void setEmptyListSearchHistory() {
+        mSearchAdapter.setData(new ArrayList<>());
     }
 
     private void setupViewPager(ViewPager viewPager) {

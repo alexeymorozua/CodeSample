@@ -15,4 +15,12 @@ public final class BusHelper {
       mRepository = repository;
     }
   }
+
+  public static class StartDownloadRepository {
+    public String query;
+
+    public StartDownloadRepository(String query) {
+      this.query = query;
+    }
+  }
 }
