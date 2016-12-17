@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +26,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.lapism.searchview.SearchAdapter;
 import com.lapism.searchview.SearchView;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 /**
@@ -33,51 +35,54 @@ import java.util.ArrayList;
 
 public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
-    @InjectPresenter HomePresenter mHomePresenter;
+  @InjectPresenter HomePresenter mHomePresenter;
 
-    @BindView(R.id.toolbar_activity_home) Toolbar mToolbar;
-    @BindView(R.id.tab_layout_activity_home) TabLayout mTabLayout;
-    @BindView(R.id.view_pager_activity_home) ViewPager mViewPager;
-    @BindView(R.id.text_activity_home_name_repository) TextView mNameRepository;
-    @BindView(R.id.bottom_sheet_activity_home_repository) View mRepositoryBottomSheet;
-    @BindView(R.id.floating_button_activity_home) FloatingActionButton
-        mLikeRepositoryFloatingButton;
-    @BindView(R.id.search_view) SearchView mSearchView;
+  @BindView(R.id.toolbar_activity_home) Toolbar mToolbar;
+  @BindView(R.id.tab_layout_activity_home) TabLayout mTabLayout;
+  @BindView(R.id.view_pager_activity_home) ViewPager mViewPager;
+  @BindView(R.id.text_bottom_sheet_name_repository) TextView mNameRepositoryTextView;
+  @BindView(R.id.text_bottom_sheet_description) TextView mDescriptionTextView;
+  @BindView(R.id.image_bottom_sheet_avatar) ImageView mAvatarImageView;
+  @BindView(R.id.text_bottom_sheet_owner_login) TextView mOwnerLoginTextView;
+  @BindView(R.id.text_bottom_sheet_url) TextView mUrlTextView;
+  @BindView(R.id.bottom_sheet_activity_home_repository) View mRepositoryBottomSheet;
+  @BindView(R.id.floating_button_activity_home) FloatingActionButton mLikeRepositoryFloatingButton;
+  @BindView(R.id.search_view) SearchView mSearchView;
 
-    private BottomSheetBehavior mBottomSheetBehavior;
-    private SearchAdapter mSearchAdapter;
+  private BottomSheetBehavior mBottomSheetBehavior;
+  private SearchAdapter mSearchAdapter;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_home);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
+    setSupportActionBar(mToolbar);
 
-        setupViewPager(mViewPager);
-        mTabLayout.setupWithViewPager(mViewPager);
+    setupViewPager(mViewPager);
+    mTabLayout.setupWithViewPager(mViewPager);
 
-        mSearchView.setArrowOnly(false);
-        mSearchView.setVoice(false);
-        mSearchView.setVersion(SearchView.VERSION_MENU_ITEM);
-        mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_MENU_ITEM);
-        mSearchView.setTheme(SearchView.THEME_LIGHT, true);
-        mSearchView.setHint(R.string.search);
+    mSearchView.setArrowOnly(false);
+    mSearchView.setVoice(false);
+    mSearchView.setVersion(SearchView.VERSION_MENU_ITEM);
+    mSearchView.setVersionMargins(SearchView.VERSION_MARGINS_MENU_ITEM);
+    mSearchView.setTheme(SearchView.THEME_LIGHT, true);
+    mSearchView.setHint(R.string.search);
 
-        mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    mHomePresenter.hideRepositoryDetail();
-                }
-            }
+    mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+          mHomePresenter.hideRepositoryDetail();
+        }
+      }
 
-            @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-            }
-        });
+      @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+      }
+    });
 
         mSearchAdapter = new SearchAdapter(this);
         mSearchAdapter.addOnItemClickListener((view, position) -> {
@@ -102,61 +107,65 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu_home, menu);
+    return true;
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_home_sign_out:
+        mHomePresenter.signOut();
         return true;
-    }
-
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_home_sign_out:
-                mHomePresenter.signOut();
-                return true;
-            case R.id.menu_search:
-                mSearchView.open(true, item);
-                return true;
-            case R.id.menu_clear_history_search:
-                mHomePresenter.clearHistoryDatabase();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+      case R.id.menu_search:
+        mSearchView.open(true, item);
+        return true;
+      case R.id.menu_clear_history_search:
+        mHomePresenter.clearHistoryDatabase();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
         }
-    }
+  }
 
-    @Override public void showRepositoryDetail(Repository repository) {
-        mNameRepository.setText(repository.getFullName());
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mLikeRepositoryFloatingButton.show();
-    }
+  @Override public void showRepositoryDetail(Repository repository) {
+    mNameRepositoryTextView.setText(repository.getName());
+    mDescriptionTextView.setText(repository.getDescription());
+    Picasso.with(this).load(repository.getOwner().getAvatarUrl()).into(mAvatarImageView);
+    mOwnerLoginTextView.setText(repository.getOwner().getLogin());
+    mUrlTextView.setText(repository.getHtmlUrl());
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    mLikeRepositoryFloatingButton.show();
+  }
 
-    @Override public void hideRepositoryDetail() {
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mLikeRepositoryFloatingButton.setVisibility(View.GONE);
-    }
+  @Override public void hideRepositoryDetail() {
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    mLikeRepositoryFloatingButton.setVisibility(View.GONE);
+  }
 
-    @Override public void selectTab() {
-        TabLayout.Tab tab = mTabLayout.getTabAt(0);
-        if (tab != null) {
-            tab.select();
-        }
+  @Override public void selectTab() {
+    TabLayout.Tab tab = mTabLayout.getTabAt(0);
+    if (tab != null) {
+      tab.select();
     }
+  }
 
-    @Override public void signOut() {
-        startActivity(new Intent(this, SignInActivity.class));
-        finishAffinity();
-    }
+  @Override public void signOut() {
+    startActivity(new Intent(this, SignInActivity.class));
+    finishAffinity();
+  }
 
-    @Override public void setEmptyListSearchHistory() {
-        mSearchAdapter.setData(new ArrayList<>());
-    }
+  @Override public void setEmptyListSearchHistory() {
+    mSearchAdapter.setData(new ArrayList<>());
+  }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerRepositoriesAdapter adapter =
-            new ViewPagerRepositoriesAdapter(getSupportFragmentManager());
-        adapter.addFragment(new RepositoriesFragment(),
-            getResources().getString(R.string.repositories));
-        adapter.addFragment(new SaveRepositoriesFragment(),
-            getResources().getString(R.string.save_repositories));
-        viewPager.setAdapter(adapter);
-    }
+  private void setupViewPager(ViewPager viewPager) {
+    ViewPagerRepositoriesAdapter adapter =
+        new ViewPagerRepositoriesAdapter(getSupportFragmentManager());
+    adapter.addFragment(new RepositoriesFragment(),
+        getResources().getString(R.string.repositories));
+    adapter.addFragment(new SaveRepositoriesFragment(),
+        getResources().getString(R.string.save_repositories));
+    viewPager.setAdapter(adapter);
+  }
 }

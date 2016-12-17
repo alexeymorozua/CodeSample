@@ -7,5 +7,5 @@ import com.arellomobile.mvp.MvpView;
  */
 
 public interface SplashView extends MvpView {
-    void setAuthorized(boolean isAuthorized);
+  void setAuthorized(boolean isAuthorized);
 }

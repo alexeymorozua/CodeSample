@@ -14,21 +14,18 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 public class SplashActivity extends MvpAppCompatActivity implements SplashView {
 
-    @InjectPresenter
-    SplashPresenter mSplashPresenter;
+  @InjectPresenter SplashPresenter mSplashPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        getMvpDelegate().onAttach();
+    getMvpDelegate().onAttach();
 
-        mSplashPresenter.checkAuthorized();
-    }
+    mSplashPresenter.checkAuthorized();
+  }
 
-    @Override
-    public void setAuthorized(boolean isAuthorized) {
-        startActivity(new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class));
-        this.finish();
-    }
+  @Override public void setAuthorized(boolean isAuthorized) {
+    startActivity(new Intent(this, isAuthorized ? HomeActivity.class : SignInActivity.class));
+    this.finish();
+  }
 }

@@ -43,26 +43,7 @@
       app:layout_behavior="com.lapism.searchview.SearchBehavior"
       />
 
-  <android.support.constraint.ConstraintLayout
-      android:id="@+id/bottom_sheet_activity_home_repository"
-      android:layout_width="match_parent"
-      android:layout_height="350dp"
-      android:clickable="true"
-      android:background="@android:color/holo_orange_light"
-      app:behavior_hideable="true"
-      app:behavior_peekHeight="80dp"
-      app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-      >
-
-    <TextView
-        android:id="@+id/text_activity_home_name_repository"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-  </android.support.constraint.ConstraintLayout>
+  <include layout="@layout/bottom_sheet_repository"/>
 
   <android.support.design.widget.FloatingActionButton
       android:id="@+id/floating_button_activity_home"

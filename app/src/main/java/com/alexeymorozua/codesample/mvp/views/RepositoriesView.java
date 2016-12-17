@@ -20,8 +20,7 @@ import java.util.List;
 
   void setTotalPages(int pages);
 
-  @StateStrategyType(SingleStateStrategy.class)
-  void onStartLoading();
+  @StateStrategyType(SingleStateStrategy.class) void onStartLoading();
 
   void onFinishLoading();
 
