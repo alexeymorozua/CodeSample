@@ -62,6 +62,14 @@ import javax.inject.Inject;
     getViewState().hideRepositoryDetail();
   }
 
+  public void openRepositoryDetail() {
+    getViewState().openRepositoryDetail();
+  }
+
+  public void closeRepositoryDetail() {
+    getViewState().closeRepositoryDetail();
+  }
+
   @Subscribe public void showRepositoryDetail(BusHelper.ShowRepositoryDetail showRepositoryDetail) {
     getViewState().showRepositoryDetail(showRepositoryDetail.mRepository);
   }

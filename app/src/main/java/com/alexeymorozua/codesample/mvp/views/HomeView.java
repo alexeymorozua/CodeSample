@@ -16,6 +16,10 @@ public interface HomeView extends MvpView {
 
   void hideRepositoryDetail();
 
+  void openRepositoryDetail();
+
+  void closeRepositoryDetail();
+
   @StateStrategyType(SkipStrategy.class) void selectTab();
 
   @StateStrategyType(SkipStrategy.class) void signOut();

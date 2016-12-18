@@ -70,17 +70,45 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     mSearchView.setTheme(SearchView.THEME_LIGHT, true);
     mSearchView.setHint(R.string.search);
 
+    //hide FloatingActionButton after start activity
+    mLikeRepositoryFloatingButton.animate().scaleX(0).scaleY(0).setDuration(0).start();
+
     mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
       @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
-        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-          mHomePresenter.hideRepositoryDetail();
+
+        switch (newState) {
+          case BottomSheetBehavior.STATE_HIDDEN:
+            mHomePresenter.hideRepositoryDetail();
+            break;
+          case BottomSheetBehavior.STATE_COLLAPSED:
+            mHomePresenter.closeRepositoryDetail();
+            break;
+          case BottomSheetBehavior.STATE_EXPANDED:
+            mHomePresenter.openRepositoryDetail();
+            break;
         }
       }
 
       @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+      }
+    });
+
+    mLikeRepositoryFloatingButton.setOnClickListener(view -> {
+
+    });
+
+    mRepositoryBottomSheet.setOnClickListener(view -> {
+
+      switch (mBottomSheetBehavior.getState()) {
+        case BottomSheetBehavior.STATE_COLLAPSED:
+          mHomePresenter.openRepositoryDetail();
+          break;
+        case BottomSheetBehavior.STATE_EXPANDED:
+          mHomePresenter.closeRepositoryDetail();
+          break;
       }
     });
 
@@ -134,13 +162,24 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     Picasso.with(this).load(repository.getOwner().getAvatarUrl()).into(mAvatarImageView);
     mOwnerLoginTextView.setText(repository.getOwner().getLogin());
     mUrlTextView.setText(repository.getHtmlUrl());
-    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-    mLikeRepositoryFloatingButton.show();
+
+    if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+      mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+      mLikeRepositoryFloatingButton.animate().scaleX(1).scaleY(1).setDuration(100).start();
+    }
   }
 
   @Override public void hideRepositoryDetail() {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-    mLikeRepositoryFloatingButton.setVisibility(View.GONE);
+    mLikeRepositoryFloatingButton.animate().scaleX(0).scaleY(0).setDuration(100).start();
+  }
+
+  @Override public void openRepositoryDetail() {
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+  }
+
+  @Override public void closeRepositoryDetail() {
+    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
   }
 
   @Override public void selectTab() {

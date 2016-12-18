@@ -2,8 +2,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
     >
   <android.support.design.widget.AppBarLayout
       android:layout_width="match_parent"
@@ -49,7 +49,7 @@
       android:id="@+id/floating_button_activity_home"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:visibility="gone"
+      android:src="@drawable/bookmark_outline"
       android:layout_margin="@dimen/activity_vertical_margin"
       app:layout_anchor="@+id/bottom_sheet_activity_home_repository"
       app:layout_anchorGravity="top|end"
