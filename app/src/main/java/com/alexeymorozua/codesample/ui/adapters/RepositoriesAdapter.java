@@ -8,9 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
-import java.text.Format;
-import java.text.SimpleDateFormat;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 
 public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapter.ViewHolder> {
 
-  private List<Repository> mRepositories = new ArrayList<>();
+  private List<RepositoryDetail> mRepositories = new ArrayList<>();
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView =
@@ -29,16 +27,16 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    Repository repository = mRepositories.get(position);
-    holder.mFullNameRepositoryTextView.setText(repository.getFullName());
-    holder.mDescriptionRepositoryTextView.setText(repository.getDescription());
-    holder.mLanguageRepositoryTextView.setText(repository.getLanguage());
-    holder.mStargazersRepositoryTextView.setText(String.valueOf(repository.getStargazersCount()));
+    RepositoryDetail repositoryDetail = mRepositories.get(position);
+    holder.mFullNameRepositoryTextView.setText(repositoryDetail.getFullName());
+    holder.mDescriptionRepositoryTextView.setText(repositoryDetail.getDescription());
+    holder.mLanguageRepositoryTextView.setText(repositoryDetail.getLanguage());
+    holder.mStargazersRepositoryTextView.setText(
+        String.valueOf(repositoryDetail.getStargazersCount()));
 
-    Format formatter = new SimpleDateFormat("MM.dd.yyyy", java.util.Locale.getDefault());
     String date = holder.mUpdateRepositoryTextView.getContext().getString(R.string.update_on)
         + " "
-        + formatter.format(repository.getUpdatedAt());
+        + repositoryDetail.getUpdatedAt();
     holder.mUpdateRepositoryTextView.setText(date);
   }
 
@@ -46,16 +44,16 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     return mRepositories.size();
   }
 
-  public Repository getItem(int position) {
+  public RepositoryDetail getItem(int position) {
     return mRepositories.get(position);
   }
 
-  public void setRepositories(List<Repository> repositories) {
+  public void setRepositories(List<RepositoryDetail> repositories) {
     mRepositories = new ArrayList<>(repositories);
     notifyDataSetChanged();
   }
 
-  public void addRepositories(List<Repository> repositories) {
+  public void addRepositories(List<RepositoryDetail> repositories) {
     mRepositories.addAll(repositories);
     notifyDataSetChanged();
   }

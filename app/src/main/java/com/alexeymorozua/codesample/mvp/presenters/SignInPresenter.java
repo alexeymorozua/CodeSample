@@ -5,7 +5,7 @@ import android.util.Base64;
 import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.R;
 import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
-import com.alexeymorozua.codesample.mvp.data.model.user.User;
+import com.alexeymorozua.codesample.mvp.data.model.dto.user.UserDTO;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.SignInView;
 import com.arellomobile.mvp.InjectViewState;
@@ -51,7 +51,7 @@ import rx.android.schedulers.AndroidSchedulers;
     String credentials = String.format("%s:%s", email, password);
     final String token = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
-    Observable<User> userObservable =
+    Observable<UserDTO> userObservable =
         mGithubService.signIn(token).doOnNext(user -> mPreferencesHelper.setToken(token));
 
     Subscription subscription =

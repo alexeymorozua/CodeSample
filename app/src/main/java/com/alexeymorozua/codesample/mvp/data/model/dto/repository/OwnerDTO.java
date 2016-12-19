@@ -1,9 +1,9 @@
-package com.alexeymorozua.codesample.mvp.data.model.repository;
+package com.alexeymorozua.codesample.mvp.data.model.dto.repository;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Owner {
+public class OwnerDTO {
 
   @SerializedName("login") @Expose private String login;
   @SerializedName("id") @Expose private int id;

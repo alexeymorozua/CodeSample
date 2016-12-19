@@ -16,7 +16,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.ui.adapters.ViewPagerRepositoriesAdapter;
@@ -156,12 +156,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         }
   }
 
-  @Override public void showRepositoryDetail(Repository repository) {
-    mNameRepositoryTextView.setText(repository.getName());
-    mDescriptionTextView.setText(repository.getDescription());
-    Picasso.with(this).load(repository.getOwner().getAvatarUrl()).into(mAvatarImageView);
-    mOwnerLoginTextView.setText(repository.getOwner().getLogin());
-    mUrlTextView.setText(repository.getHtmlUrl());
+  @Override public void showRepositoryDetail(RepositoryDetail repositoryDetail) {
+    mNameRepositoryTextView.setText(repositoryDetail.getName());
+    mDescriptionTextView.setText(repositoryDetail.getDescription());
+    Picasso.with(this).load(repositoryDetail.getAvatarUrl()).into(mAvatarImageView);
+    mOwnerLoginTextView.setText(repositoryDetail.getLogin());
+    mUrlTextView.setText(repositoryDetail.getHtmlUrl());
 
     if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
       mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

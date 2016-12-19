@@ -1,10 +1,10 @@
-package com.alexeymorozua.codesample.mvp.data.model.user;
+package com.alexeymorozua.codesample.mvp.data.model.dto.user;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
-@Generated("org.jsonschema2pojo") public class User {
+@Generated("org.jsonschema2pojo") public class UserDTO {
 
   @SerializedName("login") @Expose private String login;
   @SerializedName("id") @Expose private int id;
@@ -41,7 +41,7 @@ import javax.annotation.Generated;
   @SerializedName("owned_private_repos") @Expose private int ownedPrivateRepos;
   @SerializedName("disk_usage") @Expose private int diskUsage;
   @SerializedName("collaborators") @Expose private int collaborators;
-  @SerializedName("plan") @Expose private Plan plan;
+  @SerializedName("mPlanDTO") @Expose private PlanDTO mPlanDTO;
 
   /**
    * @return The login
@@ -534,16 +534,16 @@ import javax.annotation.Generated;
   }
 
   /**
-   * @return The plan
+   * @return The mPlanDTO
    */
-  public Plan getPlan() {
-    return plan;
+  public PlanDTO getPlanDTO() {
+    return mPlanDTO;
   }
 
   /**
-   * @param plan The plan
+   * @param planDTO The mPlanDTO
    */
-  public void setPlan(Plan plan) {
-    this.plan = plan;
+  public void setPlanDTO(PlanDTO planDTO) {
+    this.mPlanDTO = planDTO;
   }
 }

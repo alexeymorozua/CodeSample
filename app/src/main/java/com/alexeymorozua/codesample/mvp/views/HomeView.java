@@ -1,6 +1,6 @@
 package com.alexeymorozua.codesample.mvp.views;
 
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
@@ -12,7 +12,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface HomeView extends MvpView {
 
-  void showRepositoryDetail(Repository repository);
+  void showRepositoryDetail(RepositoryDetail repositoryDetail);
 
   void hideRepositoryDetail();
 

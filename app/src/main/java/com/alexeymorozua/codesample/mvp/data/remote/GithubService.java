@@ -1,7 +1,7 @@
 package com.alexeymorozua.codesample.mvp.data.remote;
 
-import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
-import com.alexeymorozua.codesample.mvp.data.model.user.User;
+import com.alexeymorozua.codesample.mvp.data.model.dto.repository.SearchRepositoryDTO;
+import com.alexeymorozua.codesample.mvp.data.model.dto.user.UserDTO;
 import retrofit2.Response;
 import rx.Observable;
 
@@ -17,11 +17,11 @@ public class GithubService {
     mGithubApi = githubApi;
   }
 
-  public Observable<User> signIn(String token) {
+  public Observable<UserDTO> signIn(String token) {
     return mGithubApi.signIn(token);
   }
 
-  public Observable<Response<SearchRepository>> getSearchRepositories(String query, int page,
+  public Observable<Response<SearchRepositoryDTO>> getSearchRepositories(String query, int page,
       int pageSize) {
     return mGithubApi.getSearchRepositories(query, page, pageSize);
   }

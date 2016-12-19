@@ -1,15 +1,15 @@
-package com.alexeymorozua.codesample.mvp.data.model.repository;
+package com.alexeymorozua.codesample.mvp.data.model.dto.repository;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
-public class Repository {
+public class RepositoryDTO {
 
   @SerializedName("id") @Expose private int id;
   @SerializedName("name") @Expose private String name;
   @SerializedName("full_name") @Expose private String fullName;
-  @SerializedName("owner") @Expose private Owner owner;
+  @SerializedName("owner") @Expose private OwnerDTO mOwnerDTO;
   @SerializedName("private") @Expose private boolean _private;
   @SerializedName("html_url") @Expose private String htmlUrl;
   @SerializedName("description") @Expose private String description;
@@ -72,17 +72,17 @@ public class Repository {
   }
 
   /**
-   * @return The owner
+   * @return The mOwnerDTO
    */
-  public Owner getOwner() {
-    return owner;
+  public OwnerDTO getOwnerDTO() {
+    return mOwnerDTO;
   }
 
   /**
-   * @param owner The owner
+   * @param ownerDTO The mOwnerDTO
    */
-  public void setOwner(Owner owner) {
-    this.owner = owner;
+  public void setOwnerDTO(OwnerDTO ownerDTO) {
+    this.mOwnerDTO = ownerDTO;
   }
 
   /**

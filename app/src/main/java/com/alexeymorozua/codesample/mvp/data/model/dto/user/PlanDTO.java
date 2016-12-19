@@ -1,10 +1,10 @@
-package com.alexeymorozua.codesample.mvp.data.model.user;
+package com.alexeymorozua.codesample.mvp.data.model.dto.user;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
-@Generated("org.jsonschema2pojo") public class Plan {
+@Generated("org.jsonschema2pojo") public class PlanDTO {
 
   @SerializedName("name") @Expose private String name;
   @SerializedName("space") @Expose private int space;

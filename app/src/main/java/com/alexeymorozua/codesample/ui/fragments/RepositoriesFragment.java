@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
@@ -40,7 +40,7 @@ public class RepositoriesFragment extends BaseFragment
   private RepositoriesAdapter mRepositoriesAdapter;
 
   private boolean mLoading;
-  private int mPage = 1;
+  private int mPage;
   private int mTotalPages;
 
   public RepositoriesFragment() {
@@ -50,12 +50,15 @@ public class RepositoriesFragment extends BaseFragment
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     outState.putInt("page", mPage);
+    outState.putInt("totalPages", mTotalPages);
+
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (savedInstanceState != null) {
       mPage = savedInstanceState.getInt("page");
+      mTotalPages = savedInstanceState.getInt("totalPages");
     }
 
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -82,6 +85,7 @@ public class RepositoriesFragment extends BaseFragment
 
   @Override public void setTotalPages(int pages) {
     mTotalPages = pages;
+    mPage = 1;
   }
 
   @Override public void onStartLoading() {
@@ -94,7 +98,7 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesProgressBar.setVisibility(View.GONE);
   }
 
-  @Override public void setRepositories(List<Repository> repositories) {
+  @Override public void setRepositories(List<RepositoryDetail> repositories) {
     if (!repositories.isEmpty()) {
       mNoRepositoriesTextView.setVisibility(View.GONE);
       mRepositoriesRecyclerView.setVisibility(View.VISIBLE);
@@ -115,7 +119,7 @@ public class RepositoriesFragment extends BaseFragment
 
   }
 
-  @Override public void addRepositories(List<Repository> repositories) {
+  @Override public void addRepositories(List<RepositoryDetail> repositories) {
     mRepositoriesAdapter.addRepositories(repositories);
     mLoading = false;
   }

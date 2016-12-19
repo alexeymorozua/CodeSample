@@ -71,7 +71,7 @@ import javax.inject.Inject;
   }
 
   @Subscribe public void showRepositoryDetail(BusHelper.ShowRepositoryDetail showRepositoryDetail) {
-    getViewState().showRepositoryDetail(showRepositoryDetail.mRepository);
+    getViewState().showRepositoryDetail(showRepositoryDetail.mRepositoryDetail);
   }
 
   @Override public void onDestroy() {

@@ -1,6 +1,6 @@
 package com.alexeymorozua.codesample.util;
 
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 
 /**
  * Created by john on 06.12.2016.
@@ -9,10 +9,10 @@ import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
 public final class BusHelper {
 
   public static class ShowRepositoryDetail {
-    public Repository mRepository;
+    public RepositoryDetail mRepositoryDetail;
 
-    public ShowRepositoryDetail(Repository repository) {
-      mRepository = repository;
+    public ShowRepositoryDetail(RepositoryDetail repositoryDetail) {
+      this.mRepositoryDetail = repositoryDetail;
     }
   }
 

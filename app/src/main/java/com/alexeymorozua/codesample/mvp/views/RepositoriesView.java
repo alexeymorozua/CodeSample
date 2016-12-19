@@ -1,10 +1,11 @@
 package com.alexeymorozua.codesample.mvp.views;
 
-import com.alexeymorozua.codesample.mvp.data.model.repository.Repository;
+import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
@@ -18,13 +19,14 @@ import java.util.List;
 
   void hideError();
 
-  void setTotalPages(int pages);
+  @StateStrategyType(SkipStrategy.class) void setTotalPages(int pages);
 
   @StateStrategyType(SingleStateStrategy.class) void onStartLoading();
 
   void onFinishLoading();
 
-  void setRepositories(List<Repository> repositories);
+  void setRepositories(List<RepositoryDetail> repositories);
 
-  @StateStrategyType(AddToEndStrategy.class) void addRepositories(List<Repository> repositories);
+  @StateStrategyType(AddToEndStrategy.class) void addRepositories(
+      List<RepositoryDetail> repositories);
 }

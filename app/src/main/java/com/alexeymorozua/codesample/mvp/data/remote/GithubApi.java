@@ -1,7 +1,7 @@
 package com.alexeymorozua.codesample.mvp.data.remote;
 
-import com.alexeymorozua.codesample.mvp.data.model.repository.SearchRepository;
-import com.alexeymorozua.codesample.mvp.data.model.user.User;
+import com.alexeymorozua.codesample.mvp.data.model.dto.repository.SearchRepositoryDTO;
+import com.alexeymorozua.codesample.mvp.data.model.dto.user.UserDTO;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -16,9 +16,9 @@ public interface GithubApi {
 
   Integer PAGE_SIZE = 20;
 
-  @GET("/user") Observable<User> signIn(@Header("Authorization") String token);
+  @GET("/user") Observable<UserDTO> signIn(@Header("Authorization") String token);
 
   @GET("/search/repositories?sort=stars&order=desc")
-  Observable<Response<SearchRepository>> getSearchRepositories(@Query("q") String query,
+  Observable<Response<SearchRepositoryDTO>> getSearchRepositories(@Query("q") String query,
       @Query("page") int page, @Query("per_page") int pageSize);
 }
