@@ -1,6 +1,6 @@
 package com.alexeymorozua.codesample.util;
 
-import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
+import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 
 /**
  * Created by john on 06.12.2016.

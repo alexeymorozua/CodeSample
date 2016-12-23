@@ -5,7 +5,7 @@ import android.util.Base64;
 import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.R;
 import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
-import com.alexeymorozua.codesample.mvp.data.model.dto.user.UserDTO;
+import com.alexeymorozua.codesample.mvp.data.model.dto.UserDTO;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.SignInView;
 import com.arellomobile.mvp.InjectViewState;

@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.BindView;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
+import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;

@@ -1,7 +1,7 @@
 package com.alexeymorozua.codesample.mvp.data.remote;
 
-import com.alexeymorozua.codesample.mvp.data.model.dto.repository.SearchRepositoryDTO;
-import com.alexeymorozua.codesample.mvp.data.model.dto.user.UserDTO;
+import com.alexeymorozua.codesample.mvp.data.model.dto.SearchRepositoryDTO;
+import com.alexeymorozua.codesample.mvp.data.model.dto.UserDTO;
 import retrofit2.Response;
 import rx.Observable;
 

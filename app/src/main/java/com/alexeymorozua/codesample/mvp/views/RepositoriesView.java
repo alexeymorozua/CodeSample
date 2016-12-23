@@ -1,6 +1,6 @@
 package com.alexeymorozua.codesample.mvp.views;
 
-import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
+import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;

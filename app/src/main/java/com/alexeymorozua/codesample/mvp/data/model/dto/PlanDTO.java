@@ -1,4 +1,4 @@
-package com.alexeymorozua.codesample.mvp.data.model.dto.user;
+package com.alexeymorozua.codesample.mvp.data.model.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

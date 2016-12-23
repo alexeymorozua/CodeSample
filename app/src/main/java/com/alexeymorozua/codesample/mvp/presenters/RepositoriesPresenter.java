@@ -1,7 +1,7 @@
 package com.alexeymorozua.codesample.mvp.presenters;
 
 import com.alexeymorozua.codesample.CodeSampleApp;
-import com.alexeymorozua.codesample.mvp.data.model.vo.repository.RepositoryDetail;
+import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
