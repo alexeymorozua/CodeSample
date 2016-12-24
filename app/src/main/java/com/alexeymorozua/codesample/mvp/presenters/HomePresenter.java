@@ -2,7 +2,7 @@ package com.alexeymorozua.codesample.mvp.presenters;
 
 import android.content.Context;
 import com.alexeymorozua.codesample.CodeSampleApp;
-import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
+import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.util.BusHelper;
 import com.arellomobile.mvp.InjectViewState;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 @InjectViewState public class HomePresenter extends MvpPresenter<HomeView> {
 
-  @Inject PreferencesHelper mPreferencesHelper;
+  @Inject DataManager mDataManager;
   @Inject Bus mBus;
   @Inject Context mContext;
 
@@ -54,7 +54,8 @@ import javax.inject.Inject;
   }
 
   public void signOut() {
-    mPreferencesHelper.clear();
+    mDataManager.clearPreferences();
+    mHistoryDatabase.clearDatabase();
     getViewState().signOut();
   }
 

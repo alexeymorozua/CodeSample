@@ -2,11 +2,10 @@ package com.alexeymorozua.codesample.mvp.presenters;
 
 import android.text.TextUtils;
 import com.alexeymorozua.codesample.CodeSampleApp;
-import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
+import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.views.SplashView;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import rx.Observable;
 import rx.Subscription;
 
 /**
@@ -15,7 +14,7 @@ import rx.Subscription;
 
 public class SplashPresenter extends BasePresenter<SplashView> {
 
-  @Inject PreferencesHelper mPreferencesHelper;
+  @Inject DataManager mDataManager;
 
   public SplashPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -23,7 +22,7 @@ public class SplashPresenter extends BasePresenter<SplashView> {
 
   public void checkAuthorized() {
 
-    Subscription subscription = Observable.just(mPreferencesHelper.getToken())
+    Subscription subscription = mDataManager.getToken()
         .delay(1, TimeUnit.SECONDS)
         .subscribe(token -> {
       for (SplashView splashView : getAttachedViews()) {

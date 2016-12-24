@@ -1,16 +1,12 @@
 package com.alexeymorozua.codesample.mvp.presenters;
 
 import android.text.TextUtils;
-import android.util.Base64;
 import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.R;
-import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
-import com.alexeymorozua.codesample.mvp.data.model.dto.UserDTO;
-import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
+import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.views.SignInView;
 import com.arellomobile.mvp.InjectViewState;
 import javax.inject.Inject;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -20,8 +16,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 @InjectViewState public class SignInPresenter extends BasePresenter<SignInView> {
 
-  @Inject GithubService mGithubService;
-  @Inject PreferencesHelper mPreferencesHelper;
+  @Inject DataManager mDataManager;
 
   public SignInPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -48,14 +43,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
     getViewState().showProgress();
 
-    String credentials = String.format("%s:%s", email, password);
-    final String token = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-    Observable<UserDTO> userObservable =
-        mGithubService.signIn(token).doOnNext(user -> mPreferencesHelper.setToken(token));
-
-    Subscription subscription =
-        userObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(user -> {
+    Subscription subscription = mDataManager.setToken(email, password)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(user -> {
           getViewState().hideProgress();
           getViewState().successSignIn();
         }, exception -> {

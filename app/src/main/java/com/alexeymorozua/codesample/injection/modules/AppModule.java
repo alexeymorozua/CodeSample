@@ -3,7 +3,7 @@ package com.alexeymorozua.codesample.injection.modules;
 import android.app.Application;
 import android.content.Context;
 import com.alexeymorozua.codesample.injection.scopes.PerApplication;
-import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
+import com.alexeymorozua.codesample.mvp.data.DataManager;
 import dagger.Module;
 import dagger.Provides;
 
@@ -23,7 +23,7 @@ import dagger.Provides;
     return mApplication;
   }
 
-  @Provides @PerApplication PreferencesHelper provideSharedPreferences() {
-    return new PreferencesHelper(mApplication);
+  @Provides @PerApplication DataManager provideDataManager() {
+    return new DataManager();
   }
 }

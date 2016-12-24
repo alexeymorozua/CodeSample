@@ -1,20 +1,15 @@
 package com.alexeymorozua.codesample.mvp.presenters;
 
 import com.alexeymorozua.codesample.CodeSampleApp;
+import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
-import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
-import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.util.BusHelper;
-import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.arellomobile.mvp.InjectViewState;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.inject.Inject;
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
@@ -25,11 +20,10 @@ import timber.log.Timber;
 
 @InjectViewState public class RepositoriesPresenter extends BasePresenter<RepositoriesView> {
 
-  @Inject GithubService mGithubService;
+  @Inject DataManager mDataManager;
   @Inject Bus mBus;
 
   private String mQuery;
-  private int mTotalPages;
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -55,29 +49,12 @@ import timber.log.Timber;
       getViewState().onStartLoading();
     }
 
-    Observable<List<RepositoryDetail>> observable =
-        mGithubService.getSearchRepositories(query, page, GithubApi.PAGE_SIZE)
-            .doOnNext(searchRepositoryDTOResponse -> {
-              mTotalPages =
-                  PageLinksUtil.getTotalPages(searchRepositoryDTOResponse.headers().get("Link"));
-            })
-            .flatMap(searchRepositoryDTOResponse -> Observable.from(
-                searchRepositoryDTOResponse.body().getRepositories()))
-            .map(repositoryDTO -> {
-              Format formatter = new SimpleDateFormat("MM.dd.yyyy", java.util.Locale.getDefault());
-              String date = formatter.format(repositoryDTO.getUpdatedAt());
-              return new RepositoryDetail(repositoryDTO.getName(), repositoryDTO.getFullName(),
-                  repositoryDTO.getDescription(), repositoryDTO.getLanguage(),
-                  repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
-                  repositoryDTO.getOwnerDTO().getAvatarUrl(),
-                  repositoryDTO.getOwnerDTO().getLogin());
-            })
-            .toList();
-
-    Subscription subscription =
-        observable.observeOn(AndroidSchedulers.mainThread()).subscribe(repositories -> {
+    Subscription subscription = mDataManager.getSearchRepository(query, page)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(searchRepository -> {
           getViewState().onFinishLoading();
-          onLoadingSuccess(isPageLoading, repositories);
+          onLoadingSuccess(isPageLoading, searchRepository.getRepositoryDetails(),
+              searchRepository.getTotalPages());
         }, error -> {
           getViewState().onFinishLoading();
           getViewState().showError(error.toString());
@@ -86,12 +63,13 @@ import timber.log.Timber;
     unsubscribeOnDestroy(subscription);
   }
 
-  private void onLoadingSuccess(boolean isPageLoading, List<RepositoryDetail> repositories) {
+  private void onLoadingSuccess(boolean isPageLoading, List<RepositoryDetail> repositories,
+      int totalPages) {
 
     if (isPageLoading) {
       getViewState().addRepositories(repositories);
     } else {
-      getViewState().setTotalPages(mTotalPages);
+      getViewState().setTotalPages(totalPages);
       getViewState().setRepositories(repositories);
     }
   }
