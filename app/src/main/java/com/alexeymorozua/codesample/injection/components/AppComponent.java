@@ -5,6 +5,7 @@ import com.alexeymorozua.codesample.injection.modules.BusModule;
 import com.alexeymorozua.codesample.injection.modules.DataManagerModule;
 import com.alexeymorozua.codesample.injection.scopes.PerApplication;
 import com.alexeymorozua.codesample.mvp.data.DataManager;
+import com.alexeymorozua.codesample.mvp.data.local.DatabaseHelper;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SignInPresenter;
@@ -27,4 +28,6 @@ public interface AppComponent {
   void inject(RepositoriesPresenter presenter);
 
   void inject(DataManager dataManager);
+
+  void inject(DatabaseHelper databaseHelper);
 }

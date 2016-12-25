@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class RepositoryDTO {
 
-  @SerializedName("id") @Expose private int id;
+  @SerializedName("id") @Expose private Long id;
   @SerializedName("name") @Expose private String name;
   @SerializedName("full_name") @Expose private String fullName;
   @SerializedName("owner") @Expose private OwnerDTO mOwnerDTO;
@@ -32,14 +32,14 @@ public class RepositoryDTO {
   /**
    * @return The id
    */
-  public int getId() {
+  public Long getId() {
     return id;
   }
 
   /**
    * @param id The id
    */
-  public void setId(int id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

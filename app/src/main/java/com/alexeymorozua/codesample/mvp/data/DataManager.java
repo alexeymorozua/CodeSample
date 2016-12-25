@@ -2,6 +2,7 @@ package com.alexeymorozua.codesample.mvp.data;
 
 import android.util.Base64;
 import com.alexeymorozua.codesample.CodeSampleApp;
+import com.alexeymorozua.codesample.mvp.data.local.DatabaseHelper;
 import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
 import com.alexeymorozua.codesample.mvp.data.model.dto.UserDTO;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
@@ -22,6 +23,7 @@ public class DataManager {
 
   @Inject GithubService mGithubService;
   @Inject PreferencesHelper mPreferencesHelper;
+  @Inject DatabaseHelper mDatabaseHelper;
 
   public DataManager() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -51,7 +53,8 @@ public class DataManager {
         .map(repositoryDTO -> {
           Format formatter = new SimpleDateFormat("MM.dd.yyyy", java.util.Locale.getDefault());
           String date = formatter.format(repositoryDTO.getUpdatedAt());
-          return new RepositoryDetail(repositoryDTO.getName(), repositoryDTO.getFullName(),
+          return RepositoryDetail.newRepositoryDetail(repositoryDTO.getId(),
+              repositoryDTO.getName(), repositoryDTO.getFullName(),
               repositoryDTO.getDescription(), repositoryDTO.getLanguage(),
               repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
               repositoryDTO.getOwnerDTO().getAvatarUrl(), repositoryDTO.getOwnerDTO().getLogin());
