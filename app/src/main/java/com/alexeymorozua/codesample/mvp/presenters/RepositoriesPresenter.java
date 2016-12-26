@@ -55,10 +55,10 @@ import timber.log.Timber;
           getViewState().onFinishLoading();
           onLoadingSuccess(isPageLoading, searchRepository.getRepositoryDetails(),
               searchRepository.getTotalPages());
-        }, error -> {
+        }, throwable -> {
           getViewState().onFinishLoading();
-          getViewState().showError(error.toString());
-          Timber.e(error.toString());
+          getViewState().showError(throwable.toString());
+          Timber.e(throwable.toString());
         });
     unsubscribeOnDestroy(subscription);
   }

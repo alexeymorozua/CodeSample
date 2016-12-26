@@ -8,6 +8,7 @@ import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.local.DatabaseHelper;
 import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
+import com.alexeymorozua.codesample.mvp.presenters.RepositoriesSavePresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SignInPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SplashPresenter;
 import dagger.Component;
@@ -26,6 +27,8 @@ public interface AppComponent {
   void inject(HomePresenter presenter);
 
   void inject(RepositoriesPresenter presenter);
+
+  void inject(RepositoriesSavePresenter savePresenter);
 
   void inject(DataManager dataManager);
 

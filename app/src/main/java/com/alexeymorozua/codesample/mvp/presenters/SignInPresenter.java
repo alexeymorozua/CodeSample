@@ -48,9 +48,9 @@ import rx.android.schedulers.AndroidSchedulers;
         .subscribe(user -> {
           getViewState().hideProgress();
           getViewState().successSignIn();
-        }, exception -> {
+        }, throwable -> {
           getViewState().hideProgress();
-          getViewState().showError(exception.getMessage());
+          getViewState().showError(throwable.getMessage());
         });
     unsubscribeOnDestroy(subscription);
   }

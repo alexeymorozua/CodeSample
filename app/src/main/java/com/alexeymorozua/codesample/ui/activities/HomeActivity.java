@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,7 +22,7 @@ import com.alexeymorozua.codesample.mvp.presenters.HomePresenter;
 import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.ui.adapters.ViewPagerRepositoriesAdapter;
 import com.alexeymorozua.codesample.ui.fragments.RepositoriesFragment;
-import com.alexeymorozua.codesample.ui.fragments.SaveRepositoriesFragment;
+import com.alexeymorozua.codesample.ui.fragments.RepositoriesSaveFragment;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.lapism.searchview.SearchAdapter;
@@ -51,6 +52,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
   private BottomSheetBehavior mBottomSheetBehavior;
   private SearchAdapter mSearchAdapter;
+  private RepositoryDetail mRepositoryDetail;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -96,9 +98,8 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
       }
     });
 
-    mLikeRepositoryFloatingButton.setOnClickListener(view -> {
-
-    });
+    mLikeRepositoryFloatingButton.setOnClickListener(
+        view -> mHomePresenter.saveRepository(mRepositoryDetail));
 
     mRepositoryBottomSheet.setOnClickListener(view -> {
 
@@ -157,11 +158,12 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
   }
 
   @Override public void showRepositoryDetail(RepositoryDetail repositoryDetail) {
-    mNameRepositoryTextView.setText(repositoryDetail.getName());
-    mDescriptionTextView.setText(repositoryDetail.getDescription());
-    Picasso.with(this).load(repositoryDetail.getAvatarUrl()).into(mAvatarImageView);
-    mOwnerLoginTextView.setText(repositoryDetail.getLogin());
-    mUrlTextView.setText(repositoryDetail.getHtmlUrl());
+    mRepositoryDetail = repositoryDetail;
+    mNameRepositoryTextView.setText(mRepositoryDetail.getName());
+    mDescriptionTextView.setText(mRepositoryDetail.getDescription());
+    Picasso.with(this).load(mRepositoryDetail.getAvatarUrl()).into(mAvatarImageView);
+    mOwnerLoginTextView.setText(mRepositoryDetail.getLogin());
+    mUrlTextView.setText(mRepositoryDetail.getHtmlUrl());
 
     if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
       mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -176,6 +178,11 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
   @Override public void openRepositoryDetail() {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+  }
+
+  @Override public void saveRepository() {
+    mLikeRepositoryFloatingButton.setImageDrawable(
+        ContextCompat.getDrawable(this, R.drawable.bookmark));
   }
 
   @Override public void closeRepositoryDetail() {
@@ -203,7 +210,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         new ViewPagerRepositoriesAdapter(getSupportFragmentManager());
     adapter.addFragment(new RepositoriesFragment(),
         getResources().getString(R.string.repositories));
-    adapter.addFragment(new SaveRepositoriesFragment(),
+    adapter.addFragment(new RepositoriesSaveFragment(),
         getResources().getString(R.string.save_repositories));
     viewPager.setAdapter(adapter);
   }

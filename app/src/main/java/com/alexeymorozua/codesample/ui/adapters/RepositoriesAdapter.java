@@ -58,6 +58,11 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     notifyDataSetChanged();
   }
 
+  public void addRepository(RepositoryDetail repositoryDetail) {
+    mRepositories.add(repositoryDetail);
+    notifyDataSetChanged();
+  }
+
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.text_item_repository_full_name) TextView mFullNameRepositoryTextView;
