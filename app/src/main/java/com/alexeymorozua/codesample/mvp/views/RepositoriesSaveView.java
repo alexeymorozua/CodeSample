@@ -15,7 +15,7 @@ import java.util.List;
 
   void addRepository(RepositoryDetail repositoryDetail);
 
-  void removeRepository();
+  void deleteRepository(RepositoryDetail repositoryDetail);
 
   void addAllRepositories(List<RepositoryDetail> repositories);
 }

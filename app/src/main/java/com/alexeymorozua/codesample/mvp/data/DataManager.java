@@ -10,6 +10,7 @@ import com.alexeymorozua.codesample.mvp.data.model.vo.SearchRepository;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.util.PageLinksUtil;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -68,11 +69,19 @@ public class DataManager {
         });
   }
 
-  public Observable<PutResult> saveRepository(RepositoryDetail repositoryDetail) {
-    return mDatabaseHelper.saveRepository(repositoryDetail);
+  public Observable<PutResult> addRepository(RepositoryDetail repositoryDetail) {
+    return mDatabaseHelper.addRepository(repositoryDetail);
   }
 
   public Observable<List<RepositoryDetail>> getAllRepositories() {
     return mDatabaseHelper.getAllRepositories();
+  }
+
+  public Observable<RepositoryDetail> getRepository(Long id) {
+    return mDatabaseHelper.getRepository(id);
+  }
+
+  public Observable<DeleteResult> deleteRepository(RepositoryDetail repositoryDetail) {
+    return mDatabaseHelper.deleteRepository(repositoryDetail);
   }
 }

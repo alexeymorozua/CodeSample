@@ -11,7 +11,9 @@ import com.lapism.searchview.SearchHistoryTable;
 import com.lapism.searchview.SearchItem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
@@ -27,6 +29,7 @@ import timber.log.Timber;
   @Inject Context mContext;
 
   private SearchHistoryTable mHistoryDatabase;
+  private Long idRepository = 0L;
 
   public HomePresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -56,11 +59,26 @@ import timber.log.Timber;
     getViewState().hideRepositoryDetail();
   }
 
-  public void saveRepository(RepositoryDetail repositoryDetail) {
-    Subscription subscription = mDataManager.saveRepository(repositoryDetail)
+  public void addRepository(RepositoryDetail repositoryDetail) {
+    repositoryDetail.setSave(true);
+    Subscription subscription = mDataManager.addRepository(repositoryDetail)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(putResult -> {
+          mBus.post(new BusHelper.AddRepositoryDb(repositoryDetail.getId()));
           getViewState().saveRepository();
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
+  }
+
+  public void deleteRepository(RepositoryDetail repositoryDetail) {
+    repositoryDetail.setSave(false);
+    Subscription subscription = mDataManager.deleteRepository(repositoryDetail)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(deleteResult -> {
+          mBus.post(new BusHelper.DeleteRepositoryDb(repositoryDetail));
+          getViewState().deleteRepository();
         }, throwable -> {
           Timber.e(throwable.toString());
         });
@@ -86,7 +104,28 @@ import timber.log.Timber;
   }
 
   @Subscribe public void showRepositoryDetail(BusHelper.ShowRepositoryDetail showRepositoryDetail) {
-    getViewState().showRepositoryDetail(showRepositoryDetail.mRepositoryDetail);
+    if (!idRepository.equals(showRepositoryDetail.mRepositoryDetail.getId())) {
+      getViewState().hideRepositoryDetail();
+      Subscription subscription = Observable.just(showRepositoryDetail.mRepositoryDetail)
+          .delay(500, TimeUnit.MILLISECONDS)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(repositoryDetail -> {
+            getViewState().showRepositoryDetail(repositoryDetail);
+            idRepository = repositoryDetail.getId();
+          }, throwable -> {
+            Timber.e(throwable.toString());
+          });
+      unsubscribeOnDestroy(subscription);
+    }
+  }
+
+  @Subscribe public void hideSaveRepositoryDetail(
+      BusHelper.HideSaveRepositoryDetail hideSaveRepositoryDetail) {
+    getViewState().hideRepositoryDetail();
+  }
+
+  public void resetIdRepository() {
+    idRepository = 0L;
   }
 
   @Override public void onDestroy() {

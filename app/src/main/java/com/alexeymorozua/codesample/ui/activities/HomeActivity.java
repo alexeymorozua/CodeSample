@@ -77,7 +77,6 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
     mBottomSheetBehavior = BottomSheetBehavior.from(mRepositoryBottomSheet);
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
     mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
       @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
 
@@ -98,11 +97,15 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
       }
     });
 
-    mLikeRepositoryFloatingButton.setOnClickListener(
-        view -> mHomePresenter.saveRepository(mRepositoryDetail));
+    mLikeRepositoryFloatingButton.setOnClickListener(view -> {
+      if (mRepositoryDetail.isSave()) {
+        mHomePresenter.deleteRepository(mRepositoryDetail);
+      } else {
+        mHomePresenter.addRepository(mRepositoryDetail);
+      }
+    });
 
     mRepositoryBottomSheet.setOnClickListener(view -> {
-
       switch (mBottomSheetBehavior.getState()) {
         case BottomSheetBehavior.STATE_COLLAPSED:
           mHomePresenter.openRepositoryDetail();
@@ -133,6 +136,23 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
                 return false;
             }
         });
+
+    mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override public void onPageSelected(int position) {
+        mHomePresenter.resetIdRepository();
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mLikeRepositoryFloatingButton.animate().scaleX(0).scaleY(0).setDuration(100).start();
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+
+      }
+    });
 
     }
 
@@ -165,6 +185,9 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     mOwnerLoginTextView.setText(mRepositoryDetail.getLogin());
     mUrlTextView.setText(mRepositoryDetail.getHtmlUrl());
 
+    mLikeRepositoryFloatingButton.setImageDrawable(ContextCompat.getDrawable(this,
+        repositoryDetail.isSave() ? R.drawable.bookmark : R.drawable.bookmark_outline));
+
     if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
       mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
       mLikeRepositoryFloatingButton.animate().scaleX(1).scaleY(1).setDuration(100).start();
@@ -174,6 +197,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
   @Override public void hideRepositoryDetail() {
     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     mLikeRepositoryFloatingButton.animate().scaleX(0).scaleY(0).setDuration(100).start();
+    mHomePresenter.resetIdRepository();
   }
 
   @Override public void openRepositoryDetail() {
@@ -183,6 +207,11 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
   @Override public void saveRepository() {
     mLikeRepositoryFloatingButton.setImageDrawable(
         ContextCompat.getDrawable(this, R.drawable.bookmark));
+  }
+
+  @Override public void deleteRepository() {
+    mLikeRepositoryFloatingButton.setImageDrawable(
+        ContextCompat.getDrawable(this, R.drawable.bookmark_outline));
   }
 
   @Override public void closeRepositoryDetail() {

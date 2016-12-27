@@ -35,6 +35,8 @@ public class RepositoriesDetailTable {
 
   @NonNull public static final String COLUMN_LOGIN = "login";
 
+  @NonNull public static final String COLUMN_SAVE = "save";
+
   @NonNull public static final Query QUERY_ALL = Query.builder().table(TABLE).build();
 
   @NonNull public static String getCreateTableQuery() {
@@ -58,9 +60,7 @@ public class RepositoriesDetailTable {
         + COLUMN_HTML_URL
         + " TEXT NULL, "
         + COLUMN_AVATAR_URL
-        + " TEXT NULL, "
-        + COLUMN_LOGIN
-        + " TEXT NOT NULL UNIQUE"
+        + " TEXT NULL, " + COLUMN_LOGIN + " TEXT NULL, " + COLUMN_SAVE + " TEXT NULL"
         + ");";
   }
 }

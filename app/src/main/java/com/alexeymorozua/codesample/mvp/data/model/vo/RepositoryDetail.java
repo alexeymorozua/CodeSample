@@ -35,6 +35,8 @@ public class RepositoryDetail {
 
   @NonNull @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_LOGIN) String login;
 
+  @NonNull @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_SAVE) boolean save;
+
   private RepositoryDetail(@Nullable Long id, @NonNull String name, @NonNull String fullName,
       @NonNull String description, @NonNull String language, @NonNull int stargazersCount,
       @NonNull String updatedAt, @NonNull String htmlUrl, @NonNull String avatarUrl,
@@ -61,6 +63,14 @@ public class RepositoryDetail {
       @NonNull String avatarUrl, @NonNull String login) {
     return new RepositoryDetail(id, name, fullName, description, language, stargazersCount,
         updatedAt, htmlUrl, avatarUrl, login);
+  }
+
+  @NonNull public boolean isSave() {
+    return save;
+  }
+
+  public void setSave(@NonNull boolean save) {
+    this.save = save;
   }
 
   @Nullable public Long getId() {

@@ -7,6 +7,7 @@ import com.alexeymorozua.codesample.mvp.views.RepositoriesSaveView;
 import com.alexeymorozua.codesample.util.BusHelper;
 import com.arellomobile.mvp.InjectViewState;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,6 +25,8 @@ import timber.log.Timber;
 
   public RepositoriesSavePresenter() {
     CodeSampleApp.getAppComponent().inject(this);
+
+    mBus.register(this);
   }
 
   @Override protected void onFirstViewAttach() {
@@ -44,5 +47,36 @@ import timber.log.Timber;
           Timber.e(throwable.toString());
         });
     unsubscribeOnDestroy(subscription);
+  }
+
+  @Subscribe public void addRepository(BusHelper.AddRepositoryDb getRepository) {
+    Subscription subscription = mDataManager.getRepository(getRepository.id)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(repositoryDetail -> {
+          getViewState().addRepository(repositoryDetail);
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
+  }
+
+  @Subscribe public void deleteRepository(BusHelper.DeleteRepositoryDb deleteRepositoryDb) {
+    Subscription subscription = mDataManager.deleteRepository(deleteRepositoryDb.mRepositoryDetail)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(deleteResult -> {
+          getViewState().deleteRepository(deleteRepositoryDb.mRepositoryDetail);
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
+  }
+
+  public void hideSaveRepositoryDetail() {
+    mBus.post(new BusHelper.HideSaveRepositoryDetail(true));
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    mBus.unregister(this);
   }
 }
