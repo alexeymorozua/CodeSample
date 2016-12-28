@@ -49,11 +49,11 @@ import timber.log.Timber;
     unsubscribeOnDestroy(subscription);
   }
 
-  @Subscribe public void addRepositoryDb(BusHelper.AddRepositoryDb getRepository) {
-    Subscription subscription = mDataManager.getRepositoryDb(getRepository.id)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(repositoryDetail -> {
-          getViewState().addRepository(repositoryDetail);
+  @Subscribe public void addRepositoryDb(BusHelper.AddRepositoryDb mRepositoryDetail) {
+    mRepositoryDetail.mRepositoryDetail.setSave(true);
+    Subscription subscription = mDataManager.addRepositoryDb(mRepositoryDetail.mRepositoryDetail)
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(putResult -> {
+          getViewState().addRepository(mRepositoryDetail.mRepositoryDetail);
         }, throwable -> {
           Timber.e(throwable.toString());
         });
@@ -61,10 +61,12 @@ import timber.log.Timber;
   }
 
   @Subscribe public void deleteRepositoryDb(BusHelper.DeleteRepositoryDb deleteRepositoryDb) {
+    deleteRepositoryDb.mRepositoryDetail.setSave(false);
     Subscription subscription =
         mDataManager.deleteRepositoryDb(deleteRepositoryDb.mRepositoryDetail)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(deleteResult -> {
+          mBus.post(new BusHelper.SyncRepositoryDb(true));
           mBus.post(new BusHelper.HideSaveRepositoryDetail(true));
           getViewState().deleteRepository(deleteRepositoryDb.mRepositoryDetail);
         }, throwable -> {

@@ -33,10 +33,10 @@ public final class BusHelper {
   }
 
   public static class AddRepositoryDb {
-    public Long id;
+    public RepositoryDetail mRepositoryDetail;
 
-    public AddRepositoryDb(Long id) {
-      this.id = id;
+    public AddRepositoryDb(RepositoryDetail repositoryDetail) {
+      mRepositoryDetail = repositoryDetail;
     }
   }
 
@@ -45,6 +45,14 @@ public final class BusHelper {
 
     public DeleteRepositoryDb(RepositoryDetail repositoryDetail) {
       this.mRepositoryDetail = repositoryDetail;
+    }
+  }
+
+  public static class SyncRepositoryDb {
+    public boolean check;
+
+    public SyncRepositoryDb(boolean check) {
+      this.check = check;
     }
   }
 }

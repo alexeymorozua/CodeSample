@@ -60,29 +60,13 @@ import timber.log.Timber;
   }
 
   public void addRepository(RepositoryDetail repositoryDetail) {
-    repositoryDetail.setSave(true);
-    Subscription subscription = mDataManager.addRepositoryDb(repositoryDetail)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(putResult -> {
-          mBus.post(new BusHelper.AddRepositoryDb(repositoryDetail.getId()));
-          getViewState().saveRepository();
-        }, throwable -> {
-          Timber.e(throwable.toString());
-        });
-    unsubscribeOnDestroy(subscription);
+    mBus.post(new BusHelper.AddRepositoryDb(repositoryDetail));
+    getViewState().saveRepository();
   }
 
   public void deleteRepository(RepositoryDetail repositoryDetail) {
-    repositoryDetail.setSave(false);
-    Subscription subscription = mDataManager.deleteRepositoryDb(repositoryDetail)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(deleteResult -> {
-          mBus.post(new BusHelper.DeleteRepositoryDb(repositoryDetail));
-          getViewState().deleteRepository();
-        }, throwable -> {
-          Timber.e(throwable.toString());
-        });
-    unsubscribeOnDestroy(subscription);
+    mBus.post(new BusHelper.DeleteRepositoryDb(repositoryDetail));
+    getViewState().deleteRepository();
   }
 
   public void signOut() {

@@ -10,8 +10,10 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import java.util.List;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -24,6 +26,7 @@ import timber.log.Timber;
   @Inject Bus mBus;
 
   private String mQuery;
+  private List<RepositoryDetail> mRepositoryDetailList;
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -68,9 +71,11 @@ import timber.log.Timber;
 
     if (isPageLoading) {
       getViewState().addRepositories(repositories);
+      mRepositoryDetailList.addAll(repositories);
     } else {
       getViewState().setTotalPages(totalPages);
       getViewState().setRepositories(repositories);
+      mRepositoryDetailList = repositories;
     }
   }
 
@@ -82,6 +87,16 @@ import timber.log.Timber;
   public void downloadRepositories(BusHelper.StartDownloadRepository downloadRepository) {
     mQuery = downloadRepository.query;
     loadRepositories(mQuery);
+  }
+
+  @Subscribe public void syncRepositoryDb(BusHelper.SyncRepositoryDb syncRepositoryDb) {
+    if (mRepositoryDetailList != null) {
+      Subscription subscription = Observable.from(mRepositoryDetailList)
+          .concatMap(repositoryDetail -> mDataManager.syncRepositoryDb(repositoryDetail))
+          .subscribeOn(Schedulers.io())
+          .subscribe();
+      unsubscribeOnDestroy(subscription);
+    }
   }
 
   @Override public void onDestroy() {

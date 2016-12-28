@@ -160,6 +160,7 @@ public class RepositoryDetail {
     RepositoryDetail that = (RepositoryDetail) o;
 
     if (stargazersCount != that.stargazersCount) return false;
+    if (save != that.save) return false;
     if (id != null ? !id.equals(that.id) : that.id != null) return false;
     if (!name.equals(that.name)) return false;
     if (!fullName.equals(that.fullName)) return false;
@@ -182,6 +183,7 @@ public class RepositoryDetail {
     result = 31 * result + htmlUrl.hashCode();
     result = 31 * result + avatarUrl.hashCode();
     result = 31 * result + login.hashCode();
+    result = 31 * result + (save ? 1 : 0);
     return result;
   }
 }

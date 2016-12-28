@@ -61,7 +61,7 @@ public class DataManager {
               repositoryDTO.getDescription(), repositoryDTO.getLanguage(),
               repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
               repositoryDTO.getOwnerDTO().getAvatarUrl(), repositoryDTO.getOwnerDTO().getLogin());
-        }).concatMap(this::checkRepositoryDb)
+        }).concatMap(this::syncRepositoryDb)
         .toList()
         .map(repositoryDetails -> {
           repository.setRepositoryDetails(repositoryDetails);
@@ -81,10 +81,12 @@ public class DataManager {
     return mDatabaseHelper.getRepositoryDb(id);
   }
 
-  private Observable<RepositoryDetail> checkRepositoryDb(RepositoryDetail repository) {
+  public Observable<RepositoryDetail> syncRepositoryDb(RepositoryDetail repository) {
     return getRepositoryDb(repository.getId()).map(repositoryDetail -> {
       if (repositoryDetail != null) {
         repository.setSave(true);
+      } else {
+        repository.setSave(false);
       }
       return repository;
     });
