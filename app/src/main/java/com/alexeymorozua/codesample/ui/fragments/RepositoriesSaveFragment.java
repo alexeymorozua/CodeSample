@@ -60,7 +60,6 @@ public class RepositoriesSaveFragment extends BaseFragment implements Repositori
     mRepositoriesAdapter.deleteRepository(repositoryDetail);
     if (mRepositoriesAdapter.getItemCount() == 0) {
       mNoRepositoriesSaveTextView.setVisibility(View.VISIBLE);
-      mRepositoriesSavePresenter.hideSaveRepositoryDetail();
     }
   }
 

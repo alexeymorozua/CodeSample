@@ -61,7 +61,7 @@ public class DataManager {
               repositoryDTO.getDescription(), repositoryDTO.getLanguage(),
               repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
               repositoryDTO.getOwnerDTO().getAvatarUrl(), repositoryDTO.getOwnerDTO().getLogin());
-        })
+        }).concatMap(this::checkRepositoryDb)
         .toList()
         .map(repositoryDetails -> {
           repository.setRepositoryDetails(repositoryDetails);
@@ -69,19 +69,28 @@ public class DataManager {
         });
   }
 
-  public Observable<PutResult> addRepository(RepositoryDetail repositoryDetail) {
+  public Observable<PutResult> addRepositoryDb(RepositoryDetail repositoryDetail) {
     return mDatabaseHelper.addRepository(repositoryDetail);
   }
 
-  public Observable<List<RepositoryDetail>> getAllRepositories() {
-    return mDatabaseHelper.getAllRepositories();
+  public Observable<List<RepositoryDetail>> getAllRepositoriesDb() {
+    return mDatabaseHelper.getAllRepositoriesDb();
   }
 
-  public Observable<RepositoryDetail> getRepository(Long id) {
-    return mDatabaseHelper.getRepository(id);
+  public Observable<RepositoryDetail> getRepositoryDb(Long id) {
+    return mDatabaseHelper.getRepositoryDb(id);
   }
 
-  public Observable<DeleteResult> deleteRepository(RepositoryDetail repositoryDetail) {
-    return mDatabaseHelper.deleteRepository(repositoryDetail);
+  private Observable<RepositoryDetail> checkRepositoryDb(RepositoryDetail repository) {
+    return getRepositoryDb(repository.getId()).map(repositoryDetail -> {
+      if (repositoryDetail != null) {
+        repository.setSave(true);
+      }
+      return repository;
+    });
+  }
+
+  public Observable<DeleteResult> deleteRepositoryDb(RepositoryDetail repositoryDetail) {
+    return mDatabaseHelper.deleteRepositoryDb(repositoryDetail);
   }
 }

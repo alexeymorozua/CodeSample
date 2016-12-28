@@ -61,7 +61,7 @@ import timber.log.Timber;
 
   public void addRepository(RepositoryDetail repositoryDetail) {
     repositoryDetail.setSave(true);
-    Subscription subscription = mDataManager.addRepository(repositoryDetail)
+    Subscription subscription = mDataManager.addRepositoryDb(repositoryDetail)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(putResult -> {
           mBus.post(new BusHelper.AddRepositoryDb(repositoryDetail.getId()));
@@ -74,7 +74,7 @@ import timber.log.Timber;
 
   public void deleteRepository(RepositoryDetail repositoryDetail) {
     repositoryDetail.setSave(false);
-    Subscription subscription = mDataManager.deleteRepository(repositoryDetail)
+    Subscription subscription = mDataManager.deleteRepositoryDb(repositoryDetail)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(deleteResult -> {
           mBus.post(new BusHelper.DeleteRepositoryDb(repositoryDetail));

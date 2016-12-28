@@ -26,7 +26,7 @@ public class DatabaseHelper {
     return mStorIOSQLite.put().object(repositoryDetail).prepare().asRxObservable();
   }
 
-  public Observable<List<RepositoryDetail>> getAllRepositories() {
+  public Observable<List<RepositoryDetail>> getAllRepositoriesDb() {
     return mStorIOSQLite.get()
         .listOfObjects(RepositoryDetail.class)
         .withQuery(RepositoriesDetailTable.QUERY_ALL)
@@ -35,7 +35,7 @@ public class DatabaseHelper {
         .take(1);
   }
 
-  public Observable<RepositoryDetail> getRepository(Long id) {
+  public Observable<RepositoryDetail> getRepositoryDb(Long id) {
     return mStorIOSQLite.get()
         .object(RepositoryDetail.class)
         .withQuery(Query.builder()
@@ -48,7 +48,7 @@ public class DatabaseHelper {
         .take(1);
   }
 
-  public Observable<DeleteResult> deleteRepository(RepositoryDetail repositoryDetail) {
+  public Observable<DeleteResult> deleteRepositoryDb(RepositoryDetail repositoryDetail) {
     return mStorIOSQLite.delete().object(repositoryDetail).prepare().asRxObservable();
   }
 }

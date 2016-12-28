@@ -186,7 +186,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     mUrlTextView.setText(mRepositoryDetail.getHtmlUrl());
 
     mLikeRepositoryFloatingButton.setImageDrawable(ContextCompat.getDrawable(this,
-        repositoryDetail.isSave() ? R.drawable.bookmark : R.drawable.bookmark_outline));
+        mRepositoryDetail.isSave() ? R.drawable.bookmark : R.drawable.bookmark_outline));
 
     if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
       mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
