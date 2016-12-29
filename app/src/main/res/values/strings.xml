@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">Code Sample</string>
+  <string name="app_name">GitHub Repositories</string>
 
   <string name="hint_email">Email</string>
   <string name="hint_password">Password</string>
