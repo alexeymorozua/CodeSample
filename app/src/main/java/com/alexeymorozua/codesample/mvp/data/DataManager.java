@@ -11,6 +11,7 @@ import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
 import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -94,5 +95,10 @@ public class DataManager {
 
   public Observable<DeleteResult> deleteRepositoryDb(RepositoryDetail repositoryDetail) {
     return mDatabaseHelper.deleteRepositoryDb(repositoryDetail);
+  }
+
+  public Observable<DeleteResults<RepositoryDetail>> deleteAllRepositoriesDb() {
+    return mDatabaseHelper.getAllRepositoriesDb()
+        .concatMap(repositoryDetails -> mDatabaseHelper.deleteAllRepositoriesDb(repositoryDetails));
   }
 }

@@ -169,8 +169,11 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
       case R.id.menu_search:
         mSearchView.open(true, item);
         return true;
+      case R.id.menu_clear_save_repositories:
+        mHomePresenter.deleteSaveRepositories();
+        return true;
       case R.id.menu_clear_history_search:
-        mHomePresenter.clearHistoryDatabase();
+        mHomePresenter.deleteHistoryDatabase();
         return true;
       default:
         return super.onOptionsItemSelected(item);

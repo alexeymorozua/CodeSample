@@ -61,7 +61,6 @@ import timber.log.Timber;
   }
 
   @Subscribe public void deleteRepositoryDb(BusHelper.DeleteRepositoryDb deleteRepositoryDb) {
-    deleteRepositoryDb.mRepositoryDetail.setSave(false);
     Subscription subscription =
         mDataManager.deleteRepositoryDb(deleteRepositoryDb.mRepositoryDetail)
         .observeOn(AndroidSchedulers.mainThread())
@@ -73,6 +72,12 @@ import timber.log.Timber;
           Timber.e(throwable.toString());
         });
     unsubscribeOnDestroy(subscription);
+  }
+
+  @Subscribe public void deleteAllRepositories(BusHelper.DeleteAllRepositoriesDb repositoriesDb) {
+    getViewState().deleteAllSaveRepositories();
+    mBus.post(new BusHelper.SyncRepositoryDb(true));
+    mBus.post(new BusHelper.HideSaveRepositoryDetail(true));
   }
 
   @Override public void onDestroy() {

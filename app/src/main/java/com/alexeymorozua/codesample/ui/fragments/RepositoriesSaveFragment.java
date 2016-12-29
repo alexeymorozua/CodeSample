@@ -69,4 +69,11 @@ public class RepositoriesSaveFragment extends BaseFragment implements Repositori
       mRepositoriesAdapter.addRepositories(repositories);
     }
   }
+
+  @Override public void deleteAllSaveRepositories() {
+    mRepositoriesAdapter.deleteAllRepositories();
+    if (mRepositoriesAdapter.getItemCount() == 0) {
+      mNoRepositoriesSaveTextView.setVisibility(View.VISIBLE);
+    }
+  }
 }

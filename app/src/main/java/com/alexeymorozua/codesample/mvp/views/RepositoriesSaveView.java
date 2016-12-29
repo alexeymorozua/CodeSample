@@ -2,6 +2,8 @@ package com.alexeymorozua.codesample.mvp.views;
 
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
 /**
@@ -16,4 +18,6 @@ public interface RepositoriesSaveView
   void deleteRepository(RepositoryDetail repositoryDetail);
 
   void addAllRepositories(List<RepositoryDetail> repositories);
+
+  @StateStrategyType(AddToEndSingleStrategy.class) void deleteAllSaveRepositories();
 }

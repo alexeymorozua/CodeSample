@@ -4,6 +4,7 @@ import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import java.util.List;
@@ -50,5 +51,10 @@ public class DatabaseHelper {
 
   public Observable<DeleteResult> deleteRepositoryDb(RepositoryDetail repositoryDetail) {
     return mStorIOSQLite.delete().object(repositoryDetail).prepare().asRxObservable();
+  }
+
+  public Observable<DeleteResults<RepositoryDetail>> deleteAllRepositoriesDb(
+      List<RepositoryDetail> repositories) {
+    return mStorIOSQLite.delete().objects(repositories).prepare().asRxObservable();
   }
 }

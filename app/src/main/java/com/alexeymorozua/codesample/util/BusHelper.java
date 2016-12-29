@@ -55,4 +55,12 @@ public final class BusHelper {
       this.check = check;
     }
   }
+
+  public static class DeleteAllRepositoriesDb {
+    public boolean delete;
+
+    public DeleteAllRepositoriesDb(boolean delete) {
+      this.delete = delete;
+    }
+  }
 }

@@ -68,6 +68,11 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     notifyDataSetChanged();
   }
 
+  public void deleteAllRepositories() {
+    mRepositories.clear();
+    notifyDataSetChanged();
+  }
+
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.text_item_repository_full_name) TextView mFullNameRepositoryTextView;

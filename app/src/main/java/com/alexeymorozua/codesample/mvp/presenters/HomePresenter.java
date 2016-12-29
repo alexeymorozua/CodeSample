@@ -47,7 +47,18 @@ import timber.log.Timber;
     mHistoryDatabase.setHistorySize(10);
   }
 
-  public void clearHistoryDatabase() {
+  public void deleteSaveRepositories() {
+    Subscription subscription = mDataManager.deleteAllRepositoriesDb()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(repositoryDetailDeleteResults -> {
+          mBus.post(new BusHelper.DeleteAllRepositoriesDb(true));
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
+  }
+
+  public void deleteHistoryDatabase() {
     mHistoryDatabase.clearDatabase();
     getViewState().setEmptyListSearchHistory();
   }
