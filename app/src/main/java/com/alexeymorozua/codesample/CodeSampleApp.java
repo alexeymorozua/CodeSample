@@ -4,6 +4,8 @@ import android.app.Application;
 import com.alexeymorozua.codesample.injection.components.AppComponent;
 import com.alexeymorozua.codesample.injection.components.DaggerAppComponent;
 import com.alexeymorozua.codesample.injection.modules.AppModule;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 /**
@@ -23,6 +25,8 @@ public class CodeSampleApp extends Application {
 
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
+    } else {
+      Fabric.with(this, new Crashlytics());
     }
 
     sAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();

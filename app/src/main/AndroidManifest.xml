@@ -23,6 +23,10 @@
     </activity>
     <activity android:name=".ui.activities.HomeActivity"/>
     <activity android:name=".ui.activities.SignInActivity"/>
+
+    <meta-data
+        android:name="io.fabric.ApiKey"
+        android:value="5d9fa0331f390ab0754e6cc37c4f5c2dfa1a65c6"/>
   </application>
 
 </manifest>
