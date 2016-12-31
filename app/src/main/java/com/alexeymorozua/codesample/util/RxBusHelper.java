@@ -6,7 +6,7 @@ import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
  * Created by john on 06.12.2016.
  */
 
-public final class BusHelper {
+public final class RxBusHelper {
 
   public static class ShowRepositoryDetail {
     public RepositoryDetail mRepositoryDetail;
@@ -17,11 +17,6 @@ public final class BusHelper {
   }
 
   public static class HideSaveRepositoryDetail {
-    public boolean hide;
-
-    public HideSaveRepositoryDetail(boolean hide) {
-      this.hide = hide;
-    }
   }
 
   public static class StartDownloadRepository {
@@ -49,18 +44,8 @@ public final class BusHelper {
   }
 
   public static class SyncRepositoryDb {
-    public boolean check;
-
-    public SyncRepositoryDb(boolean check) {
-      this.check = check;
-    }
   }
 
   public static class DeleteAllRepositoriesDb {
-    public boolean delete;
-
-    public DeleteAllRepositoriesDb(boolean delete) {
-      this.delete = delete;
-    }
   }
 }

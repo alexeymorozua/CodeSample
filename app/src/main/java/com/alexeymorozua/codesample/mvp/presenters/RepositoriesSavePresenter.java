@@ -4,10 +4,9 @@ import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesSaveView;
-import com.alexeymorozua.codesample.util.BusHelper;
+import com.alexeymorozua.codesample.util.RxBus;
+import com.alexeymorozua.codesample.util.RxBusHelper;
 import com.arellomobile.mvp.InjectViewState;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -21,21 +20,25 @@ import timber.log.Timber;
     extends BasePresenter<RepositoriesSaveView> {
 
   @Inject DataManager mDataManager;
-  @Inject Bus mBus;
+  @Inject RxBus mRxBus;
+
+  private RepositoryDetail mRepositoryDetail;
 
   public RepositoriesSavePresenter() {
     CodeSampleApp.getAppComponent().inject(this);
-
-    mBus.register(this);
   }
 
   @Override protected void onFirstViewAttach() {
     super.onFirstViewAttach();
     addAllRepositories();
+
+    addRepositoryDb();
+    deleteRepositoryDb();
+    deleteAllRepositoriesDb();
   }
 
   public void showRepositoryDetail(RepositoryDetail repositoryDetail) {
-    mBus.post(new BusHelper.ShowRepositoryDetail(repositoryDetail));
+    mRxBus.post(new RxBusHelper.ShowRepositoryDetail(repositoryDetail));
   }
 
   private void addAllRepositories() {
@@ -49,39 +52,50 @@ import timber.log.Timber;
     unsubscribeOnDestroy(subscription);
   }
 
-  @Subscribe public void addRepositoryDb(BusHelper.AddRepositoryDb mRepositoryDetail) {
-    mRepositoryDetail.mRepositoryDetail.setSave(true);
-    Subscription subscription = mDataManager.addRepositoryDb(mRepositoryDetail.mRepositoryDetail)
-        .observeOn(AndroidSchedulers.mainThread()).subscribe(putResult -> {
-          getViewState().addRepository(mRepositoryDetail.mRepositoryDetail);
-        }, throwable -> {
-          Timber.e(throwable.toString());
-        });
+  public void addRepositoryDb() {
+    Subscription subscription =
+        mRxBus.filteredObservable(RxBusHelper.AddRepositoryDb.class)
+            .doOnNext(addRepositoryDb -> {
+              addRepositoryDb.mRepositoryDetail.setSave(true);
+              mRepositoryDetail = addRepositoryDb.mRepositoryDetail;
+            })
+            .concatMap(
+                addRepositoryDb -> mDataManager.addRepositoryDb(addRepositoryDb.mRepositoryDetail))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(putResult -> {
+              getViewState().addRepository(mRepositoryDetail);
+            }, throwable -> {
+              Timber.e(throwable.toString());
+            });
     unsubscribeOnDestroy(subscription);
   }
 
-  @Subscribe public void deleteRepositoryDb(BusHelper.DeleteRepositoryDb deleteRepositoryDb) {
-    Subscription subscription =
-        mDataManager.deleteRepositoryDb(deleteRepositoryDb.mRepositoryDetail)
+  private void deleteRepositoryDb() {
+    Subscription subscription = mRxBus.filteredObservable(RxBusHelper.DeleteRepositoryDb.class)
+        .doOnNext(deleteRepositoryDb -> mRepositoryDetail = deleteRepositoryDb.mRepositoryDetail)
+        .concatMap(deleteRepositoryDb -> mDataManager.deleteRepositoryDb(
+            deleteRepositoryDb.mRepositoryDetail))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(deleteResult -> {
-          mBus.post(new BusHelper.SyncRepositoryDb(true));
-          mBus.post(new BusHelper.HideSaveRepositoryDetail(true));
-          getViewState().deleteRepository(deleteRepositoryDb.mRepositoryDetail);
+          mRxBus.post(new RxBusHelper.SyncRepositoryDb());
+          mRxBus.post(new RxBusHelper.HideSaveRepositoryDetail());
+          getViewState().deleteRepository(mRepositoryDetail);
         }, throwable -> {
           Timber.e(throwable.toString());
         });
     unsubscribeOnDestroy(subscription);
   }
 
-  @Subscribe public void deleteAllRepositories(BusHelper.DeleteAllRepositoriesDb repositoriesDb) {
-    getViewState().deleteAllSaveRepositories();
-    mBus.post(new BusHelper.SyncRepositoryDb(true));
-    mBus.post(new BusHelper.HideSaveRepositoryDetail(true));
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    mBus.unregister(this);
+  private void deleteAllRepositoriesDb() {
+    Subscription subscription = mRxBus.filteredObservable(RxBusHelper.DeleteAllRepositoriesDb.class)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(deleteAllRepositoriesDb -> {
+          getViewState().deleteAllSaveRepositories();
+          mRxBus.post(new RxBusHelper.SyncRepositoryDb());
+          mRxBus.post(new RxBusHelper.HideSaveRepositoryDetail());
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
   }
 }

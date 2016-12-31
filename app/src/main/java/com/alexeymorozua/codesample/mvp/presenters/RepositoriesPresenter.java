@@ -4,10 +4,10 @@ import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
-import com.alexeymorozua.codesample.util.BusHelper;
+import com.alexeymorozua.codesample.util.RxBus;
+import com.alexeymorozua.codesample.util.RxBusHelper;
 import com.arellomobile.mvp.InjectViewState;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
@@ -23,19 +23,24 @@ import timber.log.Timber;
 @InjectViewState public class RepositoriesPresenter extends BasePresenter<RepositoriesView> {
 
   @Inject DataManager mDataManager;
-  @Inject Bus mBus;
+  @Inject RxBus mRxBus;
 
   private String mQuery;
-  private List<RepositoryDetail> mRepositoryDetailList;
+  private List<RepositoryDetail> mRepositoryDetailList = new ArrayList<>();
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
+  }
 
-    mBus.register(this);
+  @Override protected void onFirstViewAttach() {
+    super.onFirstViewAttach();
+
+    downloadRepositories();
+    syncRepositoryDb();
   }
 
   public void showRepositoryDetail(RepositoryDetail repositoryDetail) {
-    mBus.post(new BusHelper.ShowRepositoryDetail(repositoryDetail));
+    mRxBus.post(new RxBusHelper.ShowRepositoryDetail(repositoryDetail));
   }
 
   public void loadNextRepositories(int page) {
@@ -83,24 +88,28 @@ import timber.log.Timber;
     getViewState().hideError();
   }
 
-  @Subscribe
-  public void downloadRepositories(BusHelper.StartDownloadRepository downloadRepository) {
-    mQuery = downloadRepository.query;
-    loadRepositories(mQuery);
+  private void downloadRepositories() {
+    Subscription subscription = mRxBus.filteredObservable(RxBusHelper.StartDownloadRepository.class)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(startDownloadRepository -> {
+          mQuery = startDownloadRepository.query;
+          loadRepositories(mQuery);
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
   }
 
-  @Subscribe public void syncRepositoryDb(BusHelper.SyncRepositoryDb syncRepositoryDb) {
-    if (mRepositoryDetailList != null) {
-      Subscription subscription = Observable.from(mRepositoryDetailList)
-          .concatMap(repositoryDetail -> mDataManager.syncRepositoryDb(repositoryDetail))
-          .subscribeOn(Schedulers.io())
-          .subscribe();
+  private void syncRepositoryDb() {
+    Subscription subscription = mRxBus.filteredObservable(RxBusHelper.SyncRepositoryDb.class)
+        .concatMap(syncRepositoryDb -> Observable.from(mRepositoryDetailList))
+        .concatMap(repositoryDetail -> mDataManager.syncRepositoryDb(repositoryDetail))
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(repositoryDetail -> {
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
       unsubscribeOnDestroy(subscription);
-    }
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    mBus.unregister(this);
   }
 }
