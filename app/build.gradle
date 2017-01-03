@@ -89,8 +89,6 @@ dependencies {
 
   compile 'com.jakewharton.timber:timber:4.4.0'
 
-  compile 'com.github.markomilos:paginate:0.5.1'
-
   compile 'com.lapism:searchview:4.0'
 
   testCompile "junit:junit:4.12"

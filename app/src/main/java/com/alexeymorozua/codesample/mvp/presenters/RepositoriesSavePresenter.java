@@ -52,7 +52,7 @@ import timber.log.Timber;
     unsubscribeOnDestroy(subscription);
   }
 
-  public void addRepositoryDb() {
+  private void addRepositoryDb() {
     Subscription subscription =
         mRxBus.filteredObservable(RxBusHelper.AddRepositoryDb.class)
             .doOnNext(addRepositoryDb -> {

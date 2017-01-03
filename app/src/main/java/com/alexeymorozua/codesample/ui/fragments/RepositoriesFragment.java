@@ -16,11 +16,9 @@ import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
-import com.alexeymorozua.codesample.ui.views.CustomLoadingListItemCreator;
 import com.alexeymorozua.codesample.util.DialogFactory;
 import com.alexeymorozua.codesample.util.ItemClickSupport;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.paginate.Paginate;
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ import java.util.List;
  */
 
 public class RepositoriesFragment extends BaseFragment
-    implements RepositoriesView, DialogInterface.OnCancelListener, Paginate.Callbacks {
+    implements RepositoriesView, DialogInterface.OnCancelListener {
 
   @InjectPresenter RepositoriesPresenter mRepositoriesPresenter;
 
@@ -39,27 +37,12 @@ public class RepositoriesFragment extends BaseFragment
   private Dialog mErrorDialog;
   private RepositoriesAdapter mRepositoriesAdapter;
 
-  private boolean mLoading;
-  private int mPage;
-  private int mTotalPages;
-
   public RepositoriesFragment() {
     super(R.layout.fragment_reposotories);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putInt("page", mPage);
-    outState.putInt("totalPages", mTotalPages);
-
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    if (savedInstanceState != null) {
-      mPage = savedInstanceState.getInt("page");
-      mTotalPages = savedInstanceState.getInt("totalPages");
-    }
 
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
     mRepositoriesRecyclerView.setLayoutManager(mLayoutManager);
@@ -83,11 +66,6 @@ public class RepositoriesFragment extends BaseFragment
     }
   }
 
-  @Override public void setTotalPages(int pages) {
-    mTotalPages = pages;
-    mPage = 1;
-  }
-
   @Override public void onStartLoading() {
     mNoRepositoriesTextView.setVisibility(View.GONE);
     mRepositoriesRecyclerView.setVisibility(View.GONE);
@@ -98,20 +76,14 @@ public class RepositoriesFragment extends BaseFragment
     mRepositoriesProgressBar.setVisibility(View.GONE);
   }
 
-  @Override public void setRepositories(List<RepositoryDetail> repositories) {
+  @Override public void setRepositories(List<RepositoryDetail> repositories, boolean maybeMore) {
     if (!repositories.isEmpty()) {
       mNoRepositoriesTextView.setVisibility(View.GONE);
       mRepositoriesRecyclerView.setVisibility(View.VISIBLE);
 
       mRepositoriesAdapter = new RepositoriesAdapter();
       mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
-      mRepositoriesAdapter.setRepositories(repositories);
-
-      if (mTotalPages > 1) {
-        Paginate.with(mRepositoriesRecyclerView, this)
-          .setLoadingListItemCreator(new CustomLoadingListItemCreator())
-          .build();
-      }
+      mRepositoriesAdapter.setRepositories(repositories, maybeMore);
 
     } else {
       mNoRepositoriesTextView.setVisibility(View.VISIBLE);
@@ -119,9 +91,8 @@ public class RepositoriesFragment extends BaseFragment
 
   }
 
-  @Override public void addRepositories(List<RepositoryDetail> repositories) {
-    mRepositoriesAdapter.addRepositories(repositories);
-    mLoading = false;
+  @Override public void addRepositories(List<RepositoryDetail> repositories, boolean maybeMore) {
+    mRepositoriesAdapter.addRepositories(repositories, maybeMore);
   }
 
   @Override public void onCancel(DialogInterface dialogInterface) {
@@ -133,19 +104,5 @@ public class RepositoriesFragment extends BaseFragment
       mErrorDialog.dismiss();
     }
     super.onDestroyView();
-  }
-
-  @Override public void onLoadMore() {
-    mLoading = true;
-    mPage++;
-    mRepositoriesPresenter.loadNextRepositories(mPage);
-  }
-
-  @Override public boolean isLoading() {
-    return mLoading;
-  }
-
-  @Override public boolean hasLoadedAllItems() {
-    return mPage == mTotalPages;
   }
 }

@@ -7,73 +7,92 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.R;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
+import com.alexeymorozua.codesample.util.RxBus;
+import com.alexeymorozua.codesample.util.RxBusHelper;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Created by john on 06.12.2016.
  */
 
-public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapter.ViewHolder> {
+public class RepositoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-  private List<RepositoryDetail> mRepositories = new ArrayList<>();
+  @Inject RxBus mRxBus;
 
-  @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View itemView =
-        LayoutInflater.from(parent.getContext()).inflate(R.layout.item_repository, parent, false);
-    return new ViewHolder(itemView);
+  private List<RepositoryDetail> mRepositories;
+  private boolean mMaybeMore;
+
+  private static final int ITEM_LIST = 0;
+  private static final int ITEM_LOADING = 1;
+
+  public RepositoriesAdapter() {
+    CodeSampleApp.getAppComponent().inject(this);
   }
 
-  @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    RepositoryDetail repositoryDetail = mRepositories.get(position);
-    holder.mFullNameRepositoryTextView.setText(repositoryDetail.getFullName());
-    holder.mDescriptionRepositoryTextView.setText(repositoryDetail.getDescription());
-    holder.mLanguageRepositoryTextView.setText(repositoryDetail.getLanguage());
-    holder.mStargazersRepositoryTextView.setText(
-        String.valueOf(repositoryDetail.getStargazersCount()));
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    switch (viewType) {
+      case ITEM_LOADING:
+        return ItemLoadingViewHolder.create(parent);
+      default:
+        return ItemListViewHolder.create(parent);
+    }
+  }
 
-    String date = holder.mUpdateRepositoryTextView.getContext().getString(R.string.update_on)
-        + " "
-        + repositoryDetail.getUpdatedAt();
-    holder.mUpdateRepositoryTextView.setText(date);
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    switch (getItemViewType(position)) {
+      case ITEM_LIST:
+        ItemListViewHolder holderList = ((ItemListViewHolder) holder);
+        RepositoryDetail repositoryDetail = mRepositories.get(position);
+        holderList.mFullNameRepositoryTextView.setText(repositoryDetail.getFullName());
+        holderList.mDescriptionRepositoryTextView.setText(repositoryDetail.getDescription());
+        holderList.mLanguageRepositoryTextView.setText(repositoryDetail.getLanguage());
+        holderList.mStargazersRepositoryTextView.setText(
+            String.valueOf(repositoryDetail.getStargazersCount()));
+        String date =
+            holderList.mUpdateRepositoryTextView.getContext().getString(R.string.update_on)
+                + " "
+                + repositoryDetail.getUpdatedAt();
+        holderList.mUpdateRepositoryTextView.setText(date);
+        return;
+      case ITEM_LOADING:
+        mRxBus.post(new RxBusHelper.PageRepositories());
+    }
   }
 
   @Override public int getItemCount() {
-    return mRepositories.size();
+    return mRepositories.size() + (mMaybeMore ? 1 : 0);
+  }
+
+  @Override public int getItemViewType(int position) {
+    if (position == mRepositories.size()) {
+      return ITEM_LOADING;
+    }
+    return ITEM_LIST;
   }
 
   public RepositoryDetail getItem(int position) {
     return mRepositories.get(position);
   }
 
-  public void setRepositories(List<RepositoryDetail> repositories) {
+  public void setRepositories(List<RepositoryDetail> repositories, boolean maybeMore) {
+    mMaybeMore = maybeMore;
     mRepositories = new ArrayList<>(repositories);
     notifyDataSetChanged();
   }
 
-  public void addRepositories(List<RepositoryDetail> repositories) {
+  public void addRepositories(List<RepositoryDetail> repositories, boolean maybeMore) {
+    mMaybeMore = maybeMore;
     mRepositories.addAll(repositories);
     notifyDataSetChanged();
+
   }
 
-  public void addRepository(RepositoryDetail repositoryDetail) {
-    mRepositories.add(repositoryDetail);
-    notifyDataSetChanged();
-  }
-
-  public void deleteRepository(RepositoryDetail repositoryDetail) {
-    mRepositories.remove(repositoryDetail);
-    notifyDataSetChanged();
-  }
-
-  public void deleteAllRepositories() {
-    mRepositories.clear();
-    notifyDataSetChanged();
-  }
-
-  public static class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ItemListViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.text_item_repository_full_name) TextView mFullNameRepositoryTextView;
     @BindView(R.id.text_item_repository_description) TextView mDescriptionRepositoryTextView;
@@ -81,10 +100,26 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     @BindView(R.id.text_item_repository_stargazers_count) TextView mStargazersRepositoryTextView;
     @BindView(R.id.text_item_repository_updated_at) TextView mUpdateRepositoryTextView;
 
-    public ViewHolder(View itemView) {
+    ItemListViewHolder(View itemView) {
       super(itemView);
-
       ButterKnife.bind(this, itemView);
+    }
+
+    static ItemListViewHolder create(ViewGroup parent) {
+      return new ItemListViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.item_repository, parent, false));
+    }
+  }
+
+  public static class ItemLoadingViewHolder extends RecyclerView.ViewHolder {
+
+    ItemLoadingViewHolder(View itemView) {
+      super(itemView);
+    }
+
+    static ItemLoadingViewHolder create(ViewGroup parent) {
+      return new ItemLoadingViewHolder(LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.item_custom_loading, parent, false));
     }
   }
 }

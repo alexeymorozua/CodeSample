@@ -12,7 +12,7 @@ import com.alexeymorozua.codesample.R;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesSavePresenter;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesSaveView;
-import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
+import com.alexeymorozua.codesample.ui.adapters.RepositoriesSaveAdapter;
 import com.alexeymorozua.codesample.util.ItemClickSupport;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import java.util.List;
@@ -29,7 +29,7 @@ public class RepositoriesSaveFragment extends BaseFragment implements Repositori
   @BindView(R.id.recycler_view_fragment_save_repositories) RecyclerView
       mRepositoriesSaveRecyclerView;
 
-  private RepositoriesAdapter mRepositoriesAdapter;
+  private RepositoriesSaveAdapter mRepositoriesSaveAdapter;
 
   public RepositoriesSaveFragment() {
     super(R.layout.fragment_reposotories_save);
@@ -42,23 +42,23 @@ public class RepositoriesSaveFragment extends BaseFragment implements Repositori
     mRepositoriesSaveRecyclerView.setLayoutManager(mLayoutManager);
     mRepositoriesSaveRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-    mRepositoriesAdapter = new RepositoriesAdapter();
-    mRepositoriesSaveRecyclerView.setAdapter(mRepositoriesAdapter);
+    mRepositoriesSaveAdapter = new RepositoriesSaveAdapter();
+    mRepositoriesSaveRecyclerView.setAdapter(mRepositoriesSaveAdapter);
 
     ItemClickSupport.addTo(mRepositoriesSaveRecyclerView)
         .setOnItemClickListener(
             (recyclerView, position, v) -> mRepositoriesSavePresenter.showRepositoryDetail(
-                mRepositoriesAdapter.getItem(position)));
+                mRepositoriesSaveAdapter.getItem(position)));
   }
 
   @Override public void addRepository(RepositoryDetail repositoryDetail) {
     mNoRepositoriesSaveTextView.setVisibility(View.GONE);
-    mRepositoriesAdapter.addRepository(repositoryDetail);
+    mRepositoriesSaveAdapter.addRepository(repositoryDetail);
   }
 
   @Override public void deleteRepository(RepositoryDetail repositoryDetail) {
-    mRepositoriesAdapter.deleteRepository(repositoryDetail);
-    if (mRepositoriesAdapter.getItemCount() == 0) {
+    mRepositoriesSaveAdapter.deleteRepository(repositoryDetail);
+    if (mRepositoriesSaveAdapter.getItemCount() == 0) {
       mNoRepositoriesSaveTextView.setVisibility(View.VISIBLE);
     }
   }
@@ -66,13 +66,13 @@ public class RepositoriesSaveFragment extends BaseFragment implements Repositori
   @Override public void addAllRepositories(List<RepositoryDetail> repositories) {
     if (!repositories.isEmpty()) {
       mNoRepositoriesSaveTextView.setVisibility(View.GONE);
-      mRepositoriesAdapter.addRepositories(repositories);
+      mRepositoriesSaveAdapter.addRepositories(repositories);
     }
   }
 
   @Override public void deleteAllSaveRepositories() {
-    mRepositoriesAdapter.deleteAllRepositories();
-    if (mRepositoriesAdapter.getItemCount() == 0) {
+    mRepositoriesSaveAdapter.deleteAllRepositories();
+    if (mRepositoriesSaveAdapter.getItemCount() == 0) {
       mNoRepositoriesSaveTextView.setVisibility(View.VISIBLE);
     }
   }

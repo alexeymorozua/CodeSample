@@ -3,6 +3,7 @@ package com.alexeymorozua.codesample.mvp.presenters;
 import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
+import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.views.RepositoriesView;
 import com.alexeymorozua.codesample.util.RxBus;
 import com.alexeymorozua.codesample.util.RxBusHelper;
@@ -27,6 +28,7 @@ import timber.log.Timber;
 
   private String mQuery;
   private List<RepositoryDetail> mRepositoryDetailList = new ArrayList<>();
+  private int mPage;
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
@@ -37,18 +39,20 @@ import timber.log.Timber;
 
     downloadRepositories();
     syncRepositoryDb();
+    pageLoading();
   }
 
   public void showRepositoryDetail(RepositoryDetail repositoryDetail) {
     mRxBus.post(new RxBusHelper.ShowRepositoryDetail(repositoryDetail));
   }
 
-  public void loadNextRepositories(int page) {
+  private void loadNextRepositories(int page) {
     loadData(page, true, mQuery);
   }
 
   private void loadRepositories(String query) {
-    loadData(1, false, query);
+    mPage = 1;
+    loadData(mPage, false, query);
   }
 
   private void loadData(int page, boolean isPageLoading, String query) {
@@ -58,11 +62,9 @@ import timber.log.Timber;
     }
 
     Subscription subscription = mDataManager.getSearchRepository(query, page)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(searchRepository -> {
+        .observeOn(AndroidSchedulers.mainThread()).subscribe(repositories -> {
           getViewState().onFinishLoading();
-          onLoadingSuccess(isPageLoading, searchRepository.getRepositoryDetails(),
-              searchRepository.getTotalPages());
+          onLoadingSuccess(isPageLoading, repositories);
         }, throwable -> {
           getViewState().onFinishLoading();
           getViewState().showError(throwable.toString());
@@ -71,17 +73,18 @@ import timber.log.Timber;
     unsubscribeOnDestroy(subscription);
   }
 
-  private void onLoadingSuccess(boolean isPageLoading, List<RepositoryDetail> repositories,
-      int totalPages) {
+  private void onLoadingSuccess(boolean isPageLoading, List<RepositoryDetail> repositories) {
+
+    boolean maybeMore = repositories.size() == GithubApi.PAGE_SIZE;
 
     if (isPageLoading) {
-      getViewState().addRepositories(repositories);
-      mRepositoryDetailList.addAll(repositories);
+      getViewState().addRepositories(repositories, maybeMore);
     } else {
-      getViewState().setTotalPages(totalPages);
-      getViewState().setRepositories(repositories);
-      mRepositoryDetailList = repositories;
+      getViewState().setRepositories(repositories, maybeMore);
+      mRepositoryDetailList.clear();
     }
+
+    mRepositoryDetailList.addAll(repositories);
   }
 
   public void onErrorCancel() {
@@ -111,5 +114,16 @@ import timber.log.Timber;
           Timber.e(throwable.toString());
         });
       unsubscribeOnDestroy(subscription);
+  }
+
+  private void pageLoading() {
+    Subscription subscription = mRxBus.filteredObservable(RxBusHelper.PageRepositories.class)
+        .subscribe(pageRepositories -> {
+          mPage++;
+          loadNextRepositories(mPage);
+        }, throwable -> {
+          Timber.e(throwable.toString());
+        });
+    unsubscribeOnDestroy(subscription);
   }
 }

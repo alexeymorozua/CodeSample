@@ -5,7 +5,6 @@ import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.List;
 
@@ -19,14 +18,12 @@ import java.util.List;
 
   void hideError();
 
-  @StateStrategyType(SkipStrategy.class) void setTotalPages(int pages);
-
   @StateStrategyType(SingleStateStrategy.class) void onStartLoading();
 
   void onFinishLoading();
 
-  void setRepositories(List<RepositoryDetail> repositories);
+  void setRepositories(List<RepositoryDetail> repositories, boolean maybeMore);
 
   @StateStrategyType(AddToEndStrategy.class) void addRepositories(
-      List<RepositoryDetail> repositories);
+      List<RepositoryDetail> repositories, boolean maybeMore);
 }

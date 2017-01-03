@@ -48,4 +48,7 @@ public final class RxBusHelper {
 
   public static class DeleteAllRepositoriesDb {
   }
+
+  public static class PageRepositories {
+  }
 }

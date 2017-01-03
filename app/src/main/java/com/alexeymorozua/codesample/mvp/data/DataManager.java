@@ -6,10 +6,8 @@ import com.alexeymorozua.codesample.mvp.data.local.DatabaseHelper;
 import com.alexeymorozua.codesample.mvp.data.local.PreferencesHelper;
 import com.alexeymorozua.codesample.mvp.data.model.dto.UserDTO;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
-import com.alexeymorozua.codesample.mvp.data.model.vo.SearchRepository;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubApi;
 import com.alexeymorozua.codesample.mvp.data.remote.GithubService;
-import com.alexeymorozua.codesample.util.PageLinksUtil;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResults;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
@@ -47,13 +45,9 @@ public class DataManager {
     return mGithubService.signIn(token).doOnNext(user -> mPreferencesHelper.setToken(token));
   }
 
-  public Observable<SearchRepository> getSearchRepository(String query, int page) {
-    SearchRepository repository = new SearchRepository();
+  public Observable<List<RepositoryDetail>> getSearchRepository(String query, int page) {
     return mGithubService.getSearchRepositories(query, page, GithubApi.PAGE_SIZE)
-        .doOnNext(searchRepositoryDTOResponse -> repository.setTotalPages(
-            PageLinksUtil.getTotalPages(searchRepositoryDTOResponse.headers().get("Link"))))
-        .concatMap(searchRepositoryDTOResponse -> Observable.from(
-            searchRepositoryDTOResponse.body().getRepositories()))
+        .concatMap(searchRepositoryDTO -> Observable.from(searchRepositoryDTO.getRepositories()))
         .map(repositoryDTO -> {
           Format formatter = new SimpleDateFormat("MM.dd.yyyy", java.util.Locale.getDefault());
           String date = formatter.format(repositoryDTO.getUpdatedAt());
@@ -63,11 +57,7 @@ public class DataManager {
               repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
               repositoryDTO.getOwnerDTO().getAvatarUrl(), repositoryDTO.getOwnerDTO().getLogin());
         }).concatMap(this::syncRepositoryDb)
-        .toList()
-        .map(repositoryDetails -> {
-          repository.setRepositoryDetails(repositoryDetails);
-          return repository;
-        });
+        .toList();
   }
 
   public Observable<PutResult> addRepositoryDb(RepositoryDetail repositoryDetail) {
@@ -78,7 +68,7 @@ public class DataManager {
     return mDatabaseHelper.getAllRepositoriesDb();
   }
 
-  public Observable<RepositoryDetail> getRepositoryDb(Long id) {
+  private Observable<RepositoryDetail> getRepositoryDb(Long id) {
     return mDatabaseHelper.getRepositoryDb(id);
   }
 
