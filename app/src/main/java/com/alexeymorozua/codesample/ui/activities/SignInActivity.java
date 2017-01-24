@@ -16,6 +16,7 @@ import com.alexeymorozua.codesample.R;
 import com.alexeymorozua.codesample.mvp.presenters.SignInPresenter;
 import com.alexeymorozua.codesample.mvp.views.SignInView;
 import com.alexeymorozua.codesample.util.DialogFactory;
+import com.alexeymorozua.codesample.util.ViewUtil;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -94,6 +95,7 @@ public class SignInActivity extends MvpAppCompatActivity
   }
 
   @Override public void successSignIn() {
+    ViewUtil.hideKeyboard(this);
     startActivity(new Intent(this, HomeActivity.class));
     this.finishAffinity();
   }
