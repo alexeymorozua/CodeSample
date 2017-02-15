@@ -1,5 +1,6 @@
 package com.alexeymorozua.codesample.mvp.presenters;
 
+import android.widget.Toast;
 import com.alexeymorozua.codesample.CodeSampleApp;
 import com.alexeymorozua.codesample.mvp.data.DataManager;
 import com.alexeymorozua.codesample.mvp.data.model.vo.RepositoryDetail;
@@ -32,6 +33,11 @@ import timber.log.Timber;
 
   public RepositoriesPresenter() {
     CodeSampleApp.getAppComponent().inject(this);
+  }
+
+  @Override public void onDestroy() {
+    Timber.tag("tag").e("destroy");
+    super.onDestroy();
   }
 
   @Override protected void onFirstViewAttach() {

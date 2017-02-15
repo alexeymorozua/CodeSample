@@ -11,6 +11,7 @@ import com.alexeymorozua.codesample.mvp.presenters.RepositoriesPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.RepositoriesSavePresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SignInPresenter;
 import com.alexeymorozua.codesample.mvp.presenters.SplashPresenter;
+import com.alexeymorozua.codesample.mvp.presenters.TestPresenter;
 import com.alexeymorozua.codesample.ui.adapters.RepositoriesAdapter;
 import dagger.Component;
 
@@ -23,6 +24,8 @@ import dagger.Component;
 public interface AppComponent {
 
   void inject(SignInPresenter presenter);
+
+  void inject(TestPresenter presenter);
 
   void inject(SplashPresenter presenter);
 

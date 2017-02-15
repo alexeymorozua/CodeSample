@@ -23,6 +23,7 @@ import com.alexeymorozua.codesample.mvp.views.HomeView;
 import com.alexeymorozua.codesample.ui.adapters.ViewPagerRepositoriesAdapter;
 import com.alexeymorozua.codesample.ui.fragments.RepositoriesFragment;
 import com.alexeymorozua.codesample.ui.fragments.RepositoriesSaveFragment;
+import com.alexeymorozua.codesample.ui.fragments.TestFragment;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.lapism.searchview.SearchAdapter;
@@ -243,6 +244,8 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
     adapter.addFragment(new RepositoriesFragment(),
         getResources().getString(R.string.repositories));
     adapter.addFragment(new RepositoriesSaveFragment(),
+        getResources().getString(R.string.save_repositories));
+    adapter.addFragment(new TestFragment(),
         getResources().getString(R.string.save_repositories));
     viewPager.setAdapter(adapter);
   }
