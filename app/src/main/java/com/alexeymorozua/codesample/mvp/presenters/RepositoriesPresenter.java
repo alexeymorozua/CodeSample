@@ -62,7 +62,8 @@ import timber.log.Timber;
     }
 
     Subscription subscription = mDataManager.getSearchRepository(query, page)
-        .observeOn(AndroidSchedulers.mainThread()).subscribe(repositories -> {
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(repositories -> {
           getViewState().onFinishLoading();
           onLoadingSuccess(isPageLoading, repositories);
         }, throwable -> {
@@ -113,7 +114,7 @@ import timber.log.Timber;
         }, throwable -> {
           Timber.e(throwable.toString());
         });
-      unsubscribeOnDestroy(subscription);
+    unsubscribeOnDestroy(subscription);
   }
 
   private void pageLoading() {

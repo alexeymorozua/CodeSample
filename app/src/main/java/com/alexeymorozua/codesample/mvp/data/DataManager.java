@@ -52,10 +52,10 @@ public class DataManager {
           Format formatter = new SimpleDateFormat("MM.dd.yyyy", java.util.Locale.getDefault());
           String date = formatter.format(repositoryDTO.getUpdatedAt());
           return RepositoryDetail.newRepositoryDetail(repositoryDTO.getId(),
-              repositoryDTO.getName(), repositoryDTO.getFullName(),
-              repositoryDTO.getDescription(), repositoryDTO.getLanguage(),
-              repositoryDTO.getStargazersCount(), date, repositoryDTO.getHtmlUrl(),
-              repositoryDTO.getOwnerDTO().getAvatarUrl(), repositoryDTO.getOwnerDTO().getLogin());
+              repositoryDTO.getName(), repositoryDTO.getFullName(), repositoryDTO.getDescription(),
+              repositoryDTO.getLanguage(), repositoryDTO.getStargazersCount(), date,
+              repositoryDTO.getHtmlUrl(), repositoryDTO.getOwnerDTO().getAvatarUrl(),
+              repositoryDTO.getOwnerDTO().getLogin());
         }).concatMap(this::syncRepositoryDb)
         .toList();
   }

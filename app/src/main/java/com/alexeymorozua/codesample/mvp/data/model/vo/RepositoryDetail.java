@@ -8,8 +8,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
  * Created by john on 19.12.2016.
  */
 
-@StorIOSQLiteType(table = RepositoriesDetailTable.TABLE)
-public class RepositoryDetail {
+@StorIOSQLiteType(table = RepositoriesDetailTable.TABLE) public class RepositoryDetail {
 
   @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_ID, key = true) Long id;
 
@@ -17,13 +16,11 @@ public class RepositoryDetail {
 
   @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_FULL_NAME) String fullName;
 
-  @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_DESCRIPTION) String
-      description;
+  @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_DESCRIPTION) String description;
 
   @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_LANGUAGE) String language;
 
-  @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_STARGAZERS_COUNT) int
-      stargazersCount;
+  @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_STARGAZERS_COUNT) int stargazersCount;
 
   @StorIOSQLiteColumn(name = RepositoriesDetailTable.COLUMN_UPDATE_AT) String updatedAt;
 

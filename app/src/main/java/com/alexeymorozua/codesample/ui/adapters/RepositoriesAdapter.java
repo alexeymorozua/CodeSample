@@ -89,7 +89,6 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     mMaybeMore = maybeMore;
     mRepositories.addAll(repositories);
     notifyDataSetChanged();
-
   }
 
   public static class ItemListViewHolder extends RecyclerView.ViewHolder {

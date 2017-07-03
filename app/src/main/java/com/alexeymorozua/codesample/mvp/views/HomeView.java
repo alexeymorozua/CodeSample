@@ -9,8 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 /**
  * Created by john on 30.11.2016.
  */
-@StateStrategyType(AddToEndSingleStrategy.class)
-public interface HomeView extends MvpView {
+@StateStrategyType(AddToEndSingleStrategy.class) public interface HomeView extends MvpView {
 
   void showRepositoryDetail(RepositoryDetail repositoryDetail);
 

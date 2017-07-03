@@ -10,8 +10,7 @@ import java.util.List;
  * Created by john on 26.12.2016.
  */
 
-public interface RepositoriesSaveView
-    extends MvpView {
+public interface RepositoriesSaveView extends MvpView {
 
   void addRepository(RepositoryDetail repositoryDetail);
 

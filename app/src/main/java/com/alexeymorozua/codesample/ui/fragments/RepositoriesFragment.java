@@ -84,11 +84,9 @@ public class RepositoriesFragment extends BaseFragment
       mRepositoriesAdapter = new RepositoriesAdapter();
       mRepositoriesRecyclerView.setAdapter(mRepositoriesAdapter);
       mRepositoriesAdapter.setRepositories(repositories, maybeMore);
-
     } else {
       mNoRepositoriesTextView.setVisibility(View.VISIBLE);
     }
-
   }
 
   @Override public void addRepositories(List<RepositoryDetail> repositories, boolean maybeMore) {

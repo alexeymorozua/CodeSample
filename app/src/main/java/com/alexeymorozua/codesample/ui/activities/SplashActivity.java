@@ -7,7 +7,6 @@ import com.alexeymorozua.codesample.mvp.views.SplashView;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-
 /**
  * Created by john on 24.11.2016.
  */

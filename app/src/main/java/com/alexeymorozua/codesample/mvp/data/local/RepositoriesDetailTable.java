@@ -60,7 +60,11 @@ public class RepositoriesDetailTable {
         + COLUMN_HTML_URL
         + " TEXT NULL, "
         + COLUMN_AVATAR_URL
-        + " TEXT NULL, " + COLUMN_LOGIN + " TEXT NULL, " + COLUMN_SAVE + " TEXT NULL"
+        + " TEXT NULL, "
+        + COLUMN_LOGIN
+        + " TEXT NULL, "
+        + COLUMN_SAVE
+        + " TEXT NULL"
         + ");";
   }
 }

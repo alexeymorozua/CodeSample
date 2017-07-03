@@ -116,26 +116,26 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
       }
     });
 
-        mSearchAdapter = new SearchAdapter(this);
-        mSearchAdapter.addOnItemClickListener((view, position) -> {
-            TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
-            String query = textView.getText().toString();
-            mHomePresenter.startDownloadRepositories(query);
-            mSearchView.close(true);
-        });
-        mSearchView.setAdapter(mSearchAdapter);
+    mSearchAdapter = new SearchAdapter(this);
+    mSearchAdapter.addOnItemClickListener((view, position) -> {
+      TextView textView = (TextView) view.findViewById(R.id.textView_item_text);
+      String query = textView.getText().toString();
+      mHomePresenter.startDownloadRepositories(query);
+      mSearchView.close(true);
+    });
+    mSearchView.setAdapter(mSearchAdapter);
 
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) {
-                mHomePresenter.startDownloadRepositories(query);
-                mSearchView.close(true);
-                return true;
-            }
+    mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override public boolean onQueryTextSubmit(String query) {
+        mHomePresenter.startDownloadRepositories(query);
+        mSearchView.close(true);
+        return true;
+      }
 
-            @Override public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+      @Override public boolean onQueryTextChange(String newText) {
+        return false;
+      }
+    });
 
     mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -153,8 +153,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
 
       }
     });
-
-    }
+  }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu_home, menu);
@@ -177,7 +176,7 @@ public class HomeActivity extends MvpAppCompatActivity implements HomeView {
         return true;
       default:
         return super.onOptionsItemSelected(item);
-        }
+    }
   }
 
   @Override public void showRepositoryDetail(RepositoryDetail repositoryDetail) {

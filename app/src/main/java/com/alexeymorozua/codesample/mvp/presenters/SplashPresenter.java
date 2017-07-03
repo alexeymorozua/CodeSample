@@ -22,13 +22,12 @@ public class SplashPresenter extends BasePresenter<SplashView> {
 
   public void checkAuthorized() {
 
-    Subscription subscription = mDataManager.getToken()
-        .delay(1, TimeUnit.SECONDS)
-        .subscribe(token -> {
-      for (SplashView splashView : getAttachedViews()) {
-        splashView.setAuthorized(!TextUtils.isEmpty(token));
-      }
-    });
+    Subscription subscription =
+        mDataManager.getToken().delay(1, TimeUnit.SECONDS).subscribe(token -> {
+          for (SplashView splashView : getAttachedViews()) {
+            splashView.setAuthorized(!TextUtils.isEmpty(token));
+          }
+        });
     unsubscribeOnDestroy(subscription);
-    }
+  }
 }
